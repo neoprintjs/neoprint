@@ -21,16 +21,28 @@ export const webrtcCollector: Collector = {
       const offer = await pc.createOffer()
       await pc.setLocalDescription(offer)
 
-      // Collect ICE candidates (reveals local IPs)
+      // Collect ICE candidates — resolve as soon as we get any candidate
+      // or after 200ms, whichever comes first. We only need to know
+      // candidate types (mdns/private/public), not wait for all of them.
       await new Promise<void>((resolve) => {
-        const timeout = setTimeout(() => resolve(), 2000)
+        const timeout = setTimeout(() => resolve(), 200)
+        let resolved = false
 
         pc.onicecandidate = (event) => {
           if (event.candidate?.candidate) {
             candidates.push(event.candidate.candidate)
+            // Got at least one — resolve after a short batch window
+            if (!resolved) {
+              resolved = true
+              clearTimeout(timeout)
+              setTimeout(() => resolve(), 50)
+            }
           } else {
-            clearTimeout(timeout)
-            resolve()
+            if (!resolved) {
+              resolved = true
+              clearTimeout(timeout)
+              resolve()
+            }
           }
         }
       })

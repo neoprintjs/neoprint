@@ -35,7 +35,7 @@ export const audioCollector: Collector = {
     oscillator.start(0)
 
     // Render offline for more reliable results
-    const offlineCtx = new OfflineAudioContext(1, 44100, 44100)
+    const offlineCtx = new OfflineAudioContext(1, 5000, 44100)
     const offlineOsc = offlineCtx.createOscillator()
     const offlineCompressor = offlineCtx.createDynamicsCompressor()
 
