@@ -1,6 +1,6 @@
 # Collectors
 
-Neoprint ships with 19 built-in collectors. Each independently gathers a browser signal and reports its entropy and stability.
+Neoprint ships with 20 built-in collectors. Each independently gathers a browser signal and reports its entropy and stability.
 
 ## Built-in Collectors
 
@@ -25,8 +25,9 @@ Neoprint ships with 19 built-in collectors. Each independently gathers a browser
 | `domRect` | getBoundingClientRect precision | ~6 bits | 0.75 |
 | `svg` | SVG rendering + text BBox | ~7 bits | 0.80 |
 | `webrtc` | ICE candidate types | ~4 bits | 0.50 |
+| `hardwarePerf` | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
 
-**Total: ~130+ bits of entropy** — enough to uniquely identify >1 billion devices.
+**Total: ~135+ bits of entropy** — enough to uniquely identify >1 billion devices.
 
 ## Selecting Collectors
 

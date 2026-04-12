@@ -19,6 +19,7 @@ import { speechCollector } from './speech.js'
 import { domRectCollector } from './dom-rect.js'
 import { svgCollector } from './svg.js'
 import { webrtcCollector } from './webrtc.js'
+import { hardwarePerfCollector } from './hardware-perf.js'
 
 export const allCollectors: Collector[] = [
   canvasCollector,
@@ -40,6 +41,7 @@ export const allCollectors: Collector[] = [
   domRectCollector,
   svgCollector,
   webrtcCollector,
+  hardwarePerfCollector,
 ]
 
 export {
@@ -62,4 +64,5 @@ export {
   domRectCollector,
   svgCollector,
   webrtcCollector,
+  hardwarePerfCollector,
 }

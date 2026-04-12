@@ -4,7 +4,7 @@
 
 | Feature | Typical open-source | **neoprint** |
 |---|---|---|
-| Signal count | ~10-15 | **19+ built-in** |
+| Signal count | ~10-15 | **20 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
 | Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari** |
 | Anti-detect browser detection | No | **Multilogin, GoLogin, Dolphin Anty, ...** |

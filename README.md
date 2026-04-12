@@ -2,7 +2,7 @@
 
 **Advanced browser fingerprinting library** — open-source, modular, and privacy-aware.
 
-Neoprint collects 19+ browser signals, computes a stable device identifier, and provides spoofing detection, bot detection, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
+Neoprint collects 20 browser signals, computes a stable device identifier, and provides spoofing detection, bot detection, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
 
 [![npm version](https://img.shields.io/npm/v/@neoprintjs/core.svg)](https://www.npmjs.com/package/@neoprintjs/core)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/@neoprintjs/core)](https://bundlephobia.com/package/@neoprintjs/core)
@@ -45,7 +45,7 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 
 | Feature | Typical open-source | **neoprint** |
 |---|---|---|
-| Signal count | ~10-15 | **19+ built-in** |
+| Signal count | ~10-15 | **20 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
 | Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari** |
 | Anti-detect browser detection | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
@@ -633,8 +633,9 @@ const similarity = neoprint.compare(restored, newFp)
 | `domRect` | getBoundingClientRect precision | ~6 bits | 0.75 |
 | `svg` | SVG rendering + text BBox differences | ~7 bits | 0.80 |
 | `webrtc` | ICE candidate types (no raw IPs exposed) | ~4 bits | 0.50 |
+| `hardwarePerf` | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
 
-**Total: ~130+ bits of entropy** — enough to uniquely identify >1 billion devices.
+**Total: ~135+ bits of entropy** — enough to uniquely identify >1 billion devices.
 
 ---
 
