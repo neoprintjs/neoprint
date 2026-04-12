@@ -1,6 +1,6 @@
 import type { EnvironmentResult } from '../types.js'
 
-export function detectEnvironment(): EnvironmentResult {
+export async function detectEnvironment(): Promise<EnvironmentResult> {
   const ua = navigator.userAgent
   const platform = navigator.platform
 
@@ -9,7 +9,7 @@ export function detectEnvironment(): EnvironmentResult {
     os: detectOS(ua, platform),
     browser: detectBrowser(ua),
     vm: detectVM(),
-    privacy: detectPrivacy(),
+    privacy: await detectPrivacy(),
   }
 }
 
@@ -126,9 +126,9 @@ function detectVM(): EnvironmentResult['vm'] {
   return { detected, type }
 }
 
-function detectPrivacy(): EnvironmentResult['privacy'] {
+async function detectPrivacy(): Promise<EnvironmentResult['privacy']> {
   return {
-    adBlocker: detectAdBlocker(),
+    adBlocker: await detectAdBlocker(),
     trackingProtection: detectTrackingProtection(),
     resistFingerprinting: detectResistFingerprinting(),
     tor: detectTor(),
@@ -136,7 +136,19 @@ function detectPrivacy(): EnvironmentResult['privacy'] {
   }
 }
 
-function detectAdBlocker(): boolean {
+async function detectAdBlocker(): Promise<boolean> {
+  // Method 1: CSS-based — check if ad-classed elements get hidden
+  // Works for: uBlock Origin, AdBlock Plus (cosmetic filtering)
+  const cssBlocked = detectAdBlockerCSS()
+
+  // Method 2: Network-based — try to fetch known ad/tracking URLs
+  // Works for: AdGuard, Pi-hole, DNS-based blockers, network-level blockers
+  const networkBlocked = await detectAdBlockerNetwork()
+
+  return cssBlocked || networkBlocked
+}
+
+function detectAdBlockerCSS(): boolean {
   try {
     const el = document.createElement('div')
     el.className = 'adsbox ad-banner ad_unit'
@@ -149,6 +161,35 @@ function detectAdBlocker(): boolean {
   } catch {
     return false
   }
+}
+
+async function detectAdBlockerNetwork(): Promise<boolean> {
+  // Try to fetch well-known ad/tracking endpoints
+  // Ad blockers (AdGuard, uBlock, Pi-hole) block these at the network level
+  const testUrls = [
+    'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+    'https://cdn.doubleclick.net/favicon.ico',
+    'https://ad.doubleclick.net/favicon.ico',
+    'https://www.googletagmanager.com/gtag/js?id=G-000000',
+  ]
+
+  for (const url of testUrls) {
+    try {
+      const response = await fetch(url, {
+        method: 'HEAD',
+        mode: 'no-cors',
+        cache: 'no-store',
+        signal: AbortSignal.timeout(1500),
+      })
+      // no-cors fetch returns opaque response (status 0) on success
+      // If ad blocker blocks it, it throws a TypeError
+    } catch {
+      // Fetch failed — likely blocked by ad blocker
+      return true
+    }
+  }
+
+  return false
 }
 
 function detectTrackingProtection(): boolean {

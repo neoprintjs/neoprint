@@ -173,7 +173,7 @@ console.log(bot.signals)  // ['webdriver_present', 'headless_chrome', ...]
 Comprehensive environment profiling.
 
 ```ts
-const env = neoprint.environment()
+const env = await neoprint.environment()
 
 console.log(env.type)      // 'desktop' | 'mobile' | 'tablet' | 'bot' | 'vm' | 'emulator'
 console.log(env.os)        // { name: 'macOS', version: '15.3', spoofed: false }
@@ -279,7 +279,7 @@ fp.crossBrowserId  // Hardware hash — same ID across Chrome, Firefox, Safari o
 | `weightedId` | Corporate/school environments | No | No | **Very high** |
 | `crossBrowserId` | Cross-browser identification | **Yes** | **Yes** | Medium |
 
-**Why four?** A single hash changes whenever any signal changes (browser update = new ID = lost user). The `stableId` ignores volatile signals. The `weightedId` prioritizes high-entropy collectors so identical corporate laptops still produce different IDs. The `crossBrowserId` uses only hardware-level signals (GPU, CPU math precision, screen, fonts, timezone, audio hardware) — producing the same ID even when the user switches browsers.
+**Why four?** A single hash changes whenever any signal changes (browser update = new ID = lost user). The `stableId` ignores volatile signals. The `weightedId` prioritizes high-entropy collectors so identical corporate laptops still produce different IDs. The `crossBrowserId` uses only hardware-level signals (GPU chip name, CPU math precision, screen resolution, fonts, timezone, audio sample rate, TTS voice languages) with normalization to absorb browser-specific differences — producing the same ID even when the user switches browsers.
 
 ---
 
@@ -310,14 +310,14 @@ Detect private/incognito browsing mode across browsers.
 const result = await neoprint.detectIncognito()
 
 console.log(result.isIncognito)  // true / false
-console.log(result.signals)     // ['low_storage_quota', 'filesystem_blocked', ...]
+console.log(result.signals)     // ['low_storage_quota', 'languages_trimmed', ...]
 ```
 
 Use `incognito-resistant` mode to automatically exclude signals that change in private browsing:
 
 ```ts
 const fp = await neoprint.get({ mode: 'incognito-resistant' })
-// Excludes: storage, permissions, network
+// Excludes: storage, permissions, network, speech
 // Result: same fingerprint in normal and incognito mode
 ```
 
@@ -519,7 +519,7 @@ const bot = detectBot(fp)
 const fp = await neoprint.get({ debug: true })
 
 // Option 2: debug an existing fingerprint
-neoprint.debug(fp)
+await neoprint.debug(fp)
 // Logs: ID, confidence breakdown, entropy per collector,
 // spoofing signals, bot signals, environment details
 ```

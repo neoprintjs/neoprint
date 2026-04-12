@@ -81,7 +81,7 @@ async function get(options?: NeoprintOptions): Promise<Fingerprint> {
   fp.entropy = entropy.total
 
   if (options?.debug) {
-    debug(fp)
+    await debug(fp)
   }
 
   return fp
@@ -111,7 +111,7 @@ function bot(fp?: Fingerprint): BotResult {
 /**
  * Detect the current environment.
  */
-function environment(): EnvironmentResult {
+async function environment(): Promise<EnvironmentResult> {
   return detectEnvironment()
 }
 
@@ -206,12 +206,12 @@ function lifecycle() {
 /**
  * Debug: log fingerprint details to console.
  */
-function debug(fp: Fingerprint): void {
+async function debug(fp: Fingerprint): Promise<void> {
   const confidence = analyzeConfidence(fp.components)
   const entropy = analyzeEntropy(fp.components)
   const spoof = detectSpoofing(fp.components)
   const botResult = detectBot(fp.components)
-  const env = detectEnvironment()
+  const env = await detectEnvironment()
 
   console.group('neoprint debug')
   console.log('ID:', fp.id)

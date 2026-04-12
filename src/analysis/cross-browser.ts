@@ -5,31 +5,27 @@ import { murmurhash3 } from '../core/hash.js'
  * Compute a cross-browser ID using only hardware-level signals
  * that are independent of the browser engine.
  *
- * These signals come from the OS and hardware, not the browser:
- * - GPU vendor/renderer (same GPU = same string)
- * - Math precision (CPU-dependent, not engine-dependent)
- * - Screen properties (physical display)
- * - Timezone + locale (OS-level setting)
- * - Fonts (installed at OS level)
- * - Hardware concurrency (physical CPU cores)
- * - Device memory (physical RAM)
- * - Audio hardware characteristics
- * - Touch points (hardware capability)
+ * All values are normalized to account for browser-specific differences:
+ * - WebGL: ANGLE wrapper strings are stripped to extract real GPU name
+ * - Math: rounded to 8 significant digits (V8 vs JSC precision diffs)
+ * - Screen: colorDepth/pixelDepth excluded (Chrome 30 vs Safari 24)
+ * - Intl: locale normalized to base language (pl vs pl-PL)
+ * - Navigator: hardwareConcurrency & deviceMemory excluded (Safari caps/hides)
  */
 export function computeCrossBrowserId(components: FingerprintComponents): string {
   const signals: Record<string, unknown> = {}
 
-  // GPU — identical across browsers on the same machine
+  // GPU — normalize ANGLE wrapper strings
   const webgl = components.webgl?.value as any
   if (webgl) {
     signals.gpu = {
-      vendor: webgl.vendor,
-      renderer: webgl.renderer,
+      vendor: normalizeGpuVendor(webgl.vendor),
+      renderer: normalizeGpuRenderer(webgl.renderer),
       maxTextureSize: webgl.maxTextureSize,
     }
   }
 
-  // WebGPU adapter — hardware-level
+  // WebGPU adapter — hardware-level (already normalized by browser)
   const gpu = components.gpu?.value as any
   if (gpu?.supported) {
     signals.gpuAdapter = {
@@ -39,32 +35,29 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Math precision — CPU architecture dependent
+  // Math precision — round to 8 significant digits to absorb V8/JSC diffs
   const math = components.math?.value as any
   if (math) {
-    // Select operations with highest cross-browser consistency
     signals.math = {
-      acos: math.acos,
-      asin: math.asin,
-      atan: math.atan,
-      cos: math.cos,
-      exp: math.exp,
-      log: math.log,
-      sin: math.sin,
-      sqrt: math.sqrt,
-      tan: math.tan,
-      pow: math.pow,
+      acos: roundSig(math.acos, 8),
+      asin: roundSig(math.asin, 8),
+      atan: roundSig(math.atan, 8),
+      cos: roundSig(math.cos, 8),
+      exp: roundSig(math.exp, 8),
+      log: roundSig(math.log, 8),
+      sin: roundSig(math.sin, 8),
+      sqrt: roundSig(math.sqrt, 8),
+      tan: roundSig(math.tan, 8),
+      pow: roundSig(math.pow, 8),
     }
   }
 
-  // Screen — physical display properties
+  // Screen — exclude colorDepth/pixelDepth (Chrome 30 vs Safari 24)
   const screen = components.screen?.value as any
   if (screen) {
     signals.screen = {
       width: screen.width,
       height: screen.height,
-      colorDepth: screen.colorDepth,
-      pixelDepth: screen.pixelDepth,
       devicePixelRatio: screen.devicePixelRatio,
       hdr: screen.hdr,
       colorGamut: screen.colorGamut,
@@ -72,7 +65,7 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Timezone — OS setting
+  // Timezone — OS setting (consistent across browsers)
   const timing = components.timing?.value as any
   if (timing) {
     signals.timezone = {
@@ -81,11 +74,11 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Intl — OS locale
+  // Intl — normalize locale to base language tag
   const intl = components.intl?.value as any
   if (intl) {
     signals.intl = {
-      locale: intl.dateTimeFormat?.locale,
+      locale: normalizeLocale(intl.dateTimeFormat?.locale),
       timeZone: intl.dateTimeFormat?.timeZone,
       numberingSystem: intl.numberFormat?.numberingSystem,
     }
@@ -97,12 +90,11 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     signals.fonts = fonts
   }
 
-  // Hardware — physical properties
+  // Hardware — only truly consistent signals
+  // Excluded: hardwareConcurrency (Safari caps to 8), deviceMemory (Safari doesn't expose)
   const nav = components.navigator?.value as any
   if (nav) {
     signals.hardware = {
-      hardwareConcurrency: nav.hardwareConcurrency,
-      deviceMemory: nav.deviceMemory,
       maxTouchPoints: nav.maxTouchPoints,
       platform: nav.platform,
     }
@@ -116,15 +108,18 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Speech voices — installed at OS level
+  // Speech voices — use only unique language set (not voice names/count)
+  // Chrome exposes more voices as localService than Safari on the same OS,
+  // but the set of supported languages is identical.
   const speech = components.speech?.value
   if (Array.isArray(speech)) {
-    // Only local voices (not cloud) are OS-dependent
-    const localVoices = speech
-      .filter((v: any) => v.localService)
-      .map((v: any) => ({ name: v.name, lang: v.lang }))
-    if (localVoices.length > 0) {
-      signals.speechVoices = localVoices
+    const localLangs = [...new Set(
+      speech
+        .filter((v: any) => v.localService)
+        .map((v: any) => v.lang as string)
+    )].sort()
+    if (localLangs.length > 0) {
+      signals.speechLangs = localLangs
     }
   }
 
@@ -136,4 +131,63 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
   const h4 = murmurhash3(json, h3)
 
   return [h1, h2, h3, h4].map((h) => h.toString(16).padStart(8, '0')).join('')
+}
+
+/**
+ * Normalize GPU vendor strings.
+ * Chrome ANGLE: "Google Inc. (Apple)" → "Apple"
+ * Safari: "Apple Inc." → "Apple"
+ */
+function normalizeGpuVendor(vendor: string | null): string {
+  if (!vendor) return ''
+  // Extract real vendor from ANGLE wrapper: "Google Inc. (Apple)" → "Apple"
+  const angleMatch = vendor.match(/\(([^)]+)\)/)
+  if (angleMatch) return angleMatch[1]!.trim()
+  // Strip common suffixes
+  return vendor.replace(/\s*(Inc\.|Corporation|Ltd\.?|Co\.?)$/i, '').trim()
+}
+
+/**
+ * Normalize GPU renderer strings.
+ * Chrome ANGLE: "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)" → "Apple M4"
+ * Safari: "Apple GPU" → "Apple GPU"
+ * Firefox: "Apple M4" → "Apple M4"
+ */
+function normalizeGpuRenderer(renderer: string | null): string {
+  if (!renderer) return ''
+
+  // ANGLE format: "ANGLE (Vendor, ANGLE Metal/OpenGL Renderer: Chip Name, Version)"
+  const angleMatch = renderer.match(/ANGLE\s*\([^,]+,\s*ANGLE\s+\w+\s+Renderer:\s*([^,]+)/i)
+  if (angleMatch) return angleMatch[1]!.trim()
+
+  // Another ANGLE format: "ANGLE (Vendor, Chip Name, OpenGL version)"
+  const angleMatch2 = renderer.match(/ANGLE\s*\([^,]+,\s*([^,]+)/)
+  if (angleMatch2) {
+    const chip = angleMatch2[1]!.trim()
+    // Skip if it just says "ANGLE Metal Renderer" without a chip name
+    if (!chip.toLowerCase().startsWith('angle')) return chip
+  }
+
+  return renderer.trim()
+}
+
+/**
+ * Normalize locale to base language tag.
+ * "pl-PL" → "pl", "en-US" → "en", "zh-Hans-CN" → "zh"
+ */
+function normalizeLocale(locale: string | null | undefined): string {
+  if (!locale) return ''
+  return locale.split('-')[0]!
+}
+
+/**
+ * Round a number to N significant digits.
+ * This absorbs JS engine floating-point precision differences.
+ */
+function roundSig(value: number, digits: number): number {
+  if (value === 0 || !isFinite(value)) return value
+  const d = Math.ceil(Math.log10(Math.abs(value)))
+  const power = digits - d
+  const magnitude = Math.pow(10, power)
+  return Math.round(value * magnitude) / magnitude
 }
