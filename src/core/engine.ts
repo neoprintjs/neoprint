@@ -5,6 +5,7 @@ import { computeWeightedId } from '../analysis/weighted-id.js'
 import { computeCrossBrowserId } from '../analysis/cross-browser.js'
 import { filterByProtocol } from '../analysis/protocol.js'
 import { INCOGNITO_VOLATILE_COLLECTORS } from '../analysis/incognito.js'
+import { runInWorker, isWorkerAvailable, WORKER_COMPATIBLE } from './worker-runner.js'
 
 const DEFAULT_TIMEOUT = 5000
 
@@ -50,33 +51,69 @@ export class Engine {
     names = filterByProtocol(names)
 
     const components: FingerprintComponents = {}
+    const useWorker = options.worker !== false && isWorkerAvailable()
 
-    const tasks = names.map(async (name) => {
-      const collector = this.collectors.get(name)
-      const plugin = this.plugins.get(name)
-      const source = collector ?? plugin
+    // Split into worker-compatible and main-thread collectors
+    const mainThreadNames = useWorker
+      ? names.filter((n) => !WORKER_COMPATIBLE.has(n))
+      : names
+    const workerNames = useWorker
+      ? names.filter((n) => WORKER_COMPATIBLE.has(n))
+      : []
 
-      if (!source) return
+    // Run both tracks in parallel
+    const mainThreadTask = Promise.all(
+      mainThreadNames.map(async (name) => {
+        const collector = this.collectors.get(name)
+        const plugin = this.plugins.get(name)
 
-      try {
-        const result = await withTimeout(
-          collector
-            ? collector.collect()
-            : this.runPlugin(name, plugin!),
-          timeout,
-        )
+        if (!collector && !plugin) return
+
+        try {
+          const result = await withTimeout(
+            collector
+              ? collector.collect()
+              : this.runPlugin(name, plugin!),
+            timeout,
+          )
+          components[name] = result
+        } catch {
+          components[name] = {
+            value: null,
+            duration: 0,
+            entropy: 0,
+            stability: 0,
+          }
+        }
+      }),
+    )
+
+    const workerTask = workerNames.length > 0
+      ? runInWorker(timeout)
+      : Promise.resolve({} as FingerprintComponents)
+
+    const [, workerResults] = await Promise.all([mainThreadTask, workerTask])
+
+    // Merge worker results (worker results take priority for worker-compatible collectors)
+    for (const [name, result] of Object.entries(workerResults)) {
+      if (workerNames.includes(name)) {
         components[name] = result
-      } catch {
-        components[name] = {
-          value: null,
-          duration: 0,
-          entropy: 0,
-          stability: 0,
+      }
+    }
+
+    // Fallback: if worker didn't return a result, run on main thread
+    for (const name of workerNames) {
+      if (!components[name]) {
+        const collector = this.collectors.get(name)
+        if (collector) {
+          try {
+            components[name] = await withTimeout(collector.collect(), timeout)
+          } catch {
+            components[name] = { value: null, duration: 0, entropy: 0, stability: 0 }
+          }
         }
       }
-    })
-
-    await Promise.all(tasks)
+    }
 
     const values: Record<string, unknown> = {}
     for (const [key, comp] of Object.entries(components)) {

@@ -28,6 +28,7 @@ Neoprint collects 20 browser signals, computes a stable device identifier, and p
 - [Fingerprint lifecycle](#fingerprint-lifecycle)
 - [Privacy mode](#privacy-mode)
 - [Custom collectors (plugin system)](#custom-collectors-plugin-system)
+- [Web Worker offloading](#web-worker-offloading)
 - [Tree-shaking](#tree-shaking)
 - [Debug mode](#debug-mode)
 - [Export / import](#export--import)
@@ -53,6 +54,7 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 | Fingerprint lifecycle | No | **Drift prediction, auto-linking, decay rate** |
 | Device attestation | No | **Single trust score + integrity token** |
 | Hardware profiling | No | **CPU micro-benchmarks (silicon lottery)** |
+| Web Worker offloading | No | **Auto-offloads heavy work to background thread** |
 | Confidence scoring | No | **Per-collector stability + overall score** |
 | Spoofing detection | No | **Cross-signal inconsistency analysis** |
 | Bot detection | No | **30+ automation signals** |
@@ -614,6 +616,22 @@ neoprint.unregister('mySignal')
 // List all registered collectors
 console.log(neoprint.collectors())
 ```
+
+---
+
+## Web Worker offloading
+
+Heavy computation (math, hardware benchmarks, timing, intl, network) runs in a background Web Worker by default, keeping the main thread free for smooth UI. DOM-dependent collectors (canvas, webgl, fonts) stay on the main thread. Both run in parallel.
+
+```ts
+// Worker enabled by default
+const fp = await neoprint.get()
+
+// Disable if needed
+const fp = await neoprint.get({ worker: false })
+```
+
+If Web Workers are unavailable (e.g. some restricted contexts), neoprint falls back to main thread automatically.
 
 ---
 

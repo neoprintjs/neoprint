@@ -76,6 +76,7 @@ export interface NeoprintOptions {
   timeout?: number
   mode?: 'full' | 'privacy' | 'incognito-resistant'
   debug?: boolean
+  worker?: boolean
 }
 
 export interface NoiseReport {
