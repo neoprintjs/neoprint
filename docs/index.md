@@ -1,0 +1,38 @@
+---
+layout: home
+
+hero:
+  name: neoprint
+  text: Advanced Browser Fingerprinting
+  tagline: Open-source, modular, privacy-aware. 19+ signals, 4 ID strategies, cross-browser identification, anti-detect detection, fingerprint lifecycle. Zero dependencies.
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /guide/getting-started
+    - theme: alt
+      text: Live Demo
+      link: /demo/
+    - theme: alt
+      text: GitHub
+      link: https://github.com/neoprintjs/neoprint
+
+features:
+  - icon: "\U0001F9EC"
+    title: 4 ID Strategies
+    details: Full hash, stable (survives browser updates), weighted (fewer collisions), and cross-browser (same ID on Chrome/Firefox/Safari).
+  - icon: "\U0001F575"
+    title: Anti-Detect Detection
+    details: Detect Multilogin, GoLogin, Dolphin Anty, Linken Sphere, Incogniton, VMLogin, and AdsPower via prototype tampering and behavioral analysis.
+  - icon: "\U0001F4C8"
+    title: Fingerprint Lifecycle
+    details: Track drift over time, auto-link old and new fingerprints, predict next changes, and calculate decay rates.
+  - icon: "\U0001F916"
+    title: Bot Detection
+    details: 30+ signals detecting Puppeteer, Playwright, Selenium, headless Chrome, and other automation frameworks.
+  - icon: "\U0001F9E0"
+    title: Behavioral Biometrics
+    details: Profile typing rhythm, mouse movement patterns, scroll behavior, and touch characteristics.
+  - icon: "\U0001F512"
+    title: Privacy-Aware
+    details: GDPR-friendly privacy mode, incognito-resistant mode, protocol-aware collection. You control what gets collected.
+---
