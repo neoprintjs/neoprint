@@ -10,6 +10,35 @@ Neoprint collects 19+ browser signals, computes a stable device identifier, and 
 
 ---
 
+## Table of contents
+
+- [Why neoprint?](#why-neoprint)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [API](#api)
+- [Behavioral biometrics](#behavioral-biometrics)
+- [Session linking](#session-linking)
+- [Three IDs for different use cases](#three-ids-for-different-use-cases)
+- [Noise detection](#noise-detection)
+- [Incognito detection](#incognito-detection)
+- [Protocol-aware collection](#protocol-aware-collection)
+- [Server-side validation](#server-side-validation)
+- [Anti-detect browser detection](#anti-detect-browser-detection)
+- [Fingerprint lifecycle](#fingerprint-lifecycle)
+- [Privacy mode](#privacy-mode)
+- [Custom collectors (plugin system)](#custom-collectors-plugin-system)
+- [Tree-shaking](#tree-shaking)
+- [Debug mode](#debug-mode)
+- [Export / import](#export--import)
+- [Built-in collectors](#built-in-collectors)
+- [Browser support](#browser-support)
+- [How it works](#how-it-works)
+- [Versioning](#versioning)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Why neoprint?
 
 Most open-source fingerprinting solutions offer a basic hash of ~10 browser properties. Neoprint goes further:
