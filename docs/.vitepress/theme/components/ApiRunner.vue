@@ -66,6 +66,11 @@ async function run() {
         result.value = np.serverHints(fp)
         break
 
+      case 'attestDevice':
+        fp = await np.get()
+        result.value = await np.attestDevice(fp, { strictness: 'high' })
+        break
+
       case 'lifecycle': {
         const lc = np.lifecycle()
         fp = await np.get()
@@ -111,6 +116,7 @@ const labels: Record<string, string> = {
   detectIncognito: 'Run incognito detection',
   environment: 'Detect environment',
   benchmark: 'Run benchmark',
+  attestDevice: 'Run device attestation (high strictness)',
   serverHints: 'Generate server hints',
   lifecycle: 'Record & link fingerprint',
   behavior: 'Collect for 3 seconds',

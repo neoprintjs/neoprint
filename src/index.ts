@@ -11,6 +11,7 @@ import { detectIncognito } from './analysis/incognito.js'
 import { getProtocolAffectedCollectors } from './analysis/protocol.js'
 import { getServerHints } from './analysis/server-hints.js'
 import { detectAntiDetect } from './analysis/anti-detect.js'
+import { attestDevice as _attestDevice, verifyIntegrityToken as _verifyToken } from './analysis/attest.js'
 import { BehaviorCollector } from './behavior/index.js'
 import { SessionManager } from './session/index.js'
 import { LifecycleManager } from './lifecycle/index.js'
@@ -52,6 +53,7 @@ export type {
 export type { ConfidenceBreakdown } from './analysis/confidence.js'
 export type { EntropyBreakdown } from './analysis/entropy.js'
 export type { AntiDetectResult } from './analysis/anti-detect.js'
+export type { AttestResult, AttestOptions } from './analysis/attest.js'
 export type { LifecycleLink } from './lifecycle/index.js'
 
 // Singleton engine
@@ -197,6 +199,20 @@ function antiDetect(fp?: Fingerprint) {
 }
 
 /**
+ * Device attestation — single score answering "can I trust this request?"
+ */
+async function attestDeviceFn(fp: Fingerprint, options?: { strictness?: 'low' | 'medium' | 'high'; challenge?: string }) {
+  return _attestDevice(fp, options)
+}
+
+/**
+ * Verify an integrity token on the server side.
+ */
+function verifyToken(token: string) {
+  return _verifyToken(token)
+}
+
+/**
  * Create a lifecycle manager for drift tracking and auto-linking.
  */
 function lifecycle() {
@@ -250,6 +266,8 @@ const neoprint = {
   detectAntiDetect: antiDetect,
   detectNoise: noise,
   detectIncognito: incognito,
+  attestDevice: attestDeviceFn,
+  verifyIntegrityToken: verifyToken,
   environment,
   benchmark,
   register,
@@ -285,6 +303,8 @@ export {
   createSession,
   behavior,
   lifecycle,
+  attestDeviceFn as attestDevice,
+  verifyToken as verifyIntegrityToken,
   serverHints,
   protocolInfo,
   debug,

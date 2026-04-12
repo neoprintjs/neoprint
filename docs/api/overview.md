@@ -44,6 +44,8 @@ import {
 | `neoprint.detectAntiDetect(fp?)` | `AntiDetectResult` | Anti-detect browser detection |
 | `neoprint.detectNoise()` | `Promise<NoiseReport[]>` | Canvas/audio noise detection |
 | `neoprint.detectIncognito()` | `Promise<{isIncognito, signals}>` | Private browsing detection |
+| `neoprint.attestDevice(fp, options?)` | `Promise<AttestResult>` | Single trust score with integrity token |
+| `neoprint.verifyIntegrityToken(token)` | `{valid, payload}` | Server-side token verification |
 | `neoprint.environment()` | `Promise<EnvironmentResult>` | OS/browser/VM/privacy profiling |
 | `neoprint.benchmark(options?)` | `Promise<BenchmarkResult>` | Collector timing |
 | `neoprint.serverHints(fp)` | `ServerHints` | Server validation payload |

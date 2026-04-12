@@ -24,6 +24,7 @@ Neoprint collects 20 browser signals, computes a stable device identifier, and p
 - [Protocol-aware collection](#protocol-aware-collection)
 - [Server-side validation](#server-side-validation)
 - [Anti-detect browser detection](#anti-detect-browser-detection)
+- [Device attestation](#device-attestation)
 - [Fingerprint lifecycle](#fingerprint-lifecycle)
 - [Privacy mode](#privacy-mode)
 - [Custom collectors (plugin system)](#custom-collectors-plugin-system)
@@ -50,6 +51,8 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 | Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari** |
 | Anti-detect browser detection | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
 | Fingerprint lifecycle | No | **Drift prediction, auto-linking, decay rate** |
+| Device attestation | No | **Single trust score + integrity token** |
+| Hardware profiling | No | **CPU micro-benchmarks (silicon lottery)** |
 | Confidence scoring | No | **Per-collector stability + overall score** |
 | Spoofing detection | No | **Cross-signal inconsistency analysis** |
 | Bot detection | No | **30+ automation signals** |
@@ -482,6 +485,51 @@ console.log(result.signals)      // ['electron_shell', 'navigator_prototype_tamp
 - Browser version vs feature support mismatch
 - Chrome DevTools Protocol artifacts
 - "Too perfect" profiles (every single collector succeeds — real browsers always have quirks)
+
+---
+
+## Device attestation
+
+Single API call answering "can I trust this request?" Combines bot detection, spoofing analysis, anti-detect checks, hardware validation, and signal consistency into one weighted score.
+
+```ts
+const fp = await neoprint.get()
+
+const proof = await neoprint.attestDevice(fp, {
+  strictness: 'medium',            // 'low' | 'medium' | 'high'
+  challenge: 'server-nonce-abc',   // prevents replay attacks
+})
+
+console.log(proof.score)        // 0.0 - 1.0
+console.log(proof.isHuman)      // no bot signals detected
+console.log(proof.isPhysical)   // no VM or emulator
+console.log(proof.isAuthentic)  // no spoofing or anti-detect
+console.log(proof.factors)      // ['real_gpu', 'no_bot', 'canvas_renders', ...]
+console.log(proof.risks)        // ['no_adblock', ...] (what failed)
+console.log(proof.integrityToken)  // tamper-evident token for server verification
+```
+
+**Strictness levels:**
+
+| Level | Checks | Use case |
+|---|---|---|
+| `low` | Bot, spoofing, basic hardware | Fast pass, login forms |
+| `medium` | + VM detection, hardware perf, entropy | Default, payments |
+| `high` | + confidence threshold, ad blocker | High-security, fintech |
+
+**Server-side verification:**
+
+```js
+// Client sends integrityToken to server
+const { valid, payload } = neoprint.verifyIntegrityToken(token)
+
+if (valid) {
+  console.log(payload.sc)   // score
+  console.log(payload.fid)  // fingerprint ID
+  console.log(payload.ch)   // challenge (must match what server sent)
+  console.log(payload.ts)   // timestamp (reject if too old)
+}
+```
 
 ---
 

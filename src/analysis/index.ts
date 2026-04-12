@@ -12,3 +12,4 @@ export { filterByProtocol, isSecureContext, getProtocol, getProtocolAffectedColl
 export { getServerHints } from './server-hints.js'
 export { computeCrossBrowserId } from './cross-browser.js'
 export { detectAntiDetect } from './anti-detect.js'
+export { attestDevice, verifyIntegrityToken } from './attest.js'
