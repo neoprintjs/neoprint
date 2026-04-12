@@ -4,8 +4,8 @@
 
 Neoprint collects 19+ browser signals, computes a stable device identifier, and provides spoofing detection, bot detection, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
 
-[![npm version](https://img.shields.io/npm/v/neoprint.svg)](https://www.npmjs.com/package/neoprint)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/neoprint)](https://bundlephobia.com/package/neoprint)
+[![npm version](https://img.shields.io/npm/v/@neoprintjs/core.svg)](https://www.npmjs.com/package/@neoprintjs/core)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/@neoprintjs/core)](https://bundlephobia.com/package/@neoprintjs/core)
 [![license](https://img.shields.io/npm/l/neoprint.svg)](https://github.com/neoprintjs/neoprint/blob/main/LICENSE)
 
 ---
@@ -41,15 +41,15 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 ## Installation
 
 ```bash
-npm install neoprint
+npm install @neoprintjs/core
 ```
 
 ```bash
-yarn add neoprint
+yarn add @neoprintjs/core
 ```
 
 ```bash
-pnpm add neoprint
+pnpm add @neoprintjs/core
 ```
 
 ---
@@ -57,7 +57,7 @@ pnpm add neoprint
 ## Quick start
 
 ```ts
-import neoprint from 'neoprint'
+import neoprint from '@neoprintjs/core'
 
 // Generate a full fingerprint
 const fp = await neoprint.get()
@@ -504,7 +504,7 @@ console.log(neoprint.collectors())
 Import only what you need for smaller bundles:
 
 ```ts
-import { get, detectBot, compare } from 'neoprint'
+import { get, detectBot, compare } from '@neoprintjs/core'
 
 const fp = await get()
 const bot = detectBot(fp)

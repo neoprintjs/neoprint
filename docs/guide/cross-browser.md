@@ -18,7 +18,7 @@ The `crossBrowserId` uses only **hardware-level signals** that don't change betw
 ## Usage
 
 ```ts
-import neoprint from 'neoprint'
+import neoprint from '@neoprintjs/core'
 
 const fp = await neoprint.get()
 console.log(fp.crossBrowserId) // Same on Chrome, Firefox, Safari

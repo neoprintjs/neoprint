@@ -3,7 +3,7 @@
 ## Default Export
 
 ```ts
-import neoprint from 'neoprint'
+import neoprint from '@neoprintjs/core'
 ```
 
 ## Named Exports (tree-shakeable)
@@ -30,7 +30,7 @@ import {
   debug,
   exportFp,
   importFp,
-} from 'neoprint'
+} from '@neoprintjs/core'
 ```
 
 ## Quick Reference

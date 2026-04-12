@@ -23,7 +23,7 @@ import type {
   EntropyBreakdown,
   AntiDetectResult,
   LifecycleLink,
-} from 'neoprint'
+} from '@neoprintjs/core'
 ```
 
 ## Core Types

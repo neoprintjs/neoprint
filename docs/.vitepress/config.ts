@@ -83,7 +83,7 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/neoprintjs/neoprint' },
-      { icon: 'npm', link: 'https://www.npmjs.com/package/neoprint' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/@neoprintjs/core' },
     ],
 
     footer: {

@@ -1,5 +1,5 @@
 {
-  "name": "neoprint",
+  "name": "@neoprintjs/core",
   "version": "0.1.0",
   "description": "Advanced browser fingerprinting library — open-source, modular, and privacy-aware",
   "type": "module",
@@ -17,6 +17,9 @@
         "default": "./dist/index.cjs"
       }
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist"

@@ -4,20 +4,20 @@
 
 ::: code-group
 ```bash [npm]
-npm install neoprint
+npm install @neoprintjs/core
 ```
 ```bash [yarn]
-yarn add neoprint
+yarn add @neoprintjs/core
 ```
 ```bash [pnpm]
-pnpm add neoprint
+pnpm add @neoprintjs/core
 ```
 :::
 
 ## Quick Start
 
 ```ts
-import neoprint from 'neoprint'
+import neoprint from '@neoprintjs/core'
 
 const fp = await neoprint.get()
 
