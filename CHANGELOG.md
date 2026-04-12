@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.3.0](https://github.com/neoprintjs/neoprint/compare/v0.2.0...v0.3.0) (2026-04-12)
+
+### Features
+
+* add device attestation API with integrity token ([8aedf74](https://github.com/neoprintjs/neoprint/commit/8aedf74aa10850141127a4e95671a72f6f6001f8))
+* add hardware performance profiling collector ([bee39ef](https://github.com/neoprintjs/neoprint/commit/bee39ef5381529f198d1f03643fb33b7bea2c0f6))
+* add per-collector docs, device attestation, Web Worker offloading ([15ffd96](https://github.com/neoprintjs/neoprint/commit/15ffd96caa996dd3050d456c932bc33e3a5b1759))
+* add Web Worker offloading and device attestation ([8ff1d33](https://github.com/neoprintjs/neoprint/commit/8ff1d3340925692acf8c079eb5810af5e2f1c17c))
+
+### Bug Fixes
+
+* detect iPadOS correctly (iPad sends macOS-like UA since iPadOS 13) ([3b8b854](https://github.com/neoprintjs/neoprint/commit/3b8b854397554bb355362bc76de8373ddadc09ba))
+* read version from package.json in docs nav ([5503656](https://github.com/neoprintjs/neoprint/commit/55036561a56d1f757eb5354a2fee11c02b8c064a))
+* redesign demo UI — consistent card style, segmented control, auto-generate on load ([974c52a](https://github.com/neoprintjs/neoprint/commit/974c52a2f9be43f85f6243881c4c7b94268be35f))
+* remove debug field from detectIncognito public API ([11c4ddf](https://github.com/neoprintjs/neoprint/commit/11c4ddf5e7955576262193e7e07b912efe8bc2da))
+* three IDs -> four IDs in README heading ([4fb1f8c](https://github.com/neoprintjs/neoprint/commit/4fb1f8c4c2a256f98d4d0d1eb68af757f01bbf38))
+
+### Documentation
+
+* add llms.txt sitemap ([d77734d](https://github.com/neoprintjs/neoprint/commit/d77734d7341b01e400a58a0e408d0344593a8b49))
+* add llms.txt sitemap, remove AskAI component ([d23b9b7](https://github.com/neoprintjs/neoprint/commit/d23b9b750b215a01f2cb178e1dc9f6b5cda5f699))
+* add Node.js server-side validation example ([2c43717](https://github.com/neoprintjs/neoprint/commit/2c43717cb37debdf1b96d633907abd2cccf3fec5))
+* add table of contents to README ([654a7bc](https://github.com/neoprintjs/neoprint/commit/654a7bc2b3e797ed5e91be0e2c12d32d317d2023))
+
 ## 0.2.0 (2026-04-12)
 
 ### Features
