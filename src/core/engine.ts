@@ -60,8 +60,8 @@ export class Engine {
 
       try {
         const result = await withTimeout(
-          'collect' in source && typeof (source as Collector).collect === 'function'
-            ? (source as Collector).collect()
+          collector
+            ? collector.collect()
             : this.runPlugin(name, plugin!),
           timeout,
         )
