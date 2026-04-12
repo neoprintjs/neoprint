@@ -39,5 +39,5 @@ Bot detection (30+ signals), behavioral biometrics, noise detection, incognito r
 | **Dependencies** | Zero |
 | **Output** | ESM + CJS |
 | **Tree-shakeable** | Yes |
-| **Collectors** | 19 built-in |
+| **Collectors** | 20 built-in |
 | **License** | MIT |

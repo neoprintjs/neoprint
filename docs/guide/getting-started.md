@@ -49,6 +49,6 @@ interface Fingerprint {
 ## Next Steps
 
 - [Understand the 4 ID strategies](/guide/fingerprint-ids)
-- [See all 19 collectors](/guide/collectors)
+- [See all 20 collectors](/guide/collectors)
 - [Try the live demo](/demo/)
 - [Set up cross-browser identification](/guide/cross-browser)

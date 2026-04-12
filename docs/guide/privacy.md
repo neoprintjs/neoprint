@@ -5,7 +5,7 @@ Neoprint offers multiple modes to balance identification accuracy with user priv
 ## Modes
 
 ### Full Mode (default)
-All 19 collectors active.
+All 20 collectors active.
 
 ```ts
 const fp = await neoprint.get({ mode: 'full' })

@@ -6,26 +6,26 @@ Neoprint ships with 20 built-in collectors. Each independently gathers a browser
 
 | Collector | Signals | Entropy | Stability |
 |---|---|---|---|
-| `canvas` | 2D rendering, gradients, emoji | ~10 bits | 0.85 |
-| `webgl` | GPU vendor/renderer, extensions, limits | ~12 bits | 0.95 |
-| `audio` | OfflineAudioContext oscillator | ~8 bits | 0.80 |
-| `fonts` | 48 font families via measureText | ~12 bits | 0.90 |
-| `screen` | Resolution, DPR, HDR, color gamut | ~6 bits | 0.70 |
-| `navigator` | UA, platform, languages, memory | ~8 bits | 0.75 |
-| `timing` | Timer precision, timezone | ~5 bits | 0.60 |
-| `media` | Video/audio codec support | ~7 bits | 0.85 |
-| `storage` | Storage availability, quota | ~4 bits | 0.60 |
-| `network` | Connection type, RTT, downlink | ~3 bits | 0.30 |
-| `gpu` | WebGPU adapter info, features | ~10 bits | 0.90 |
-| `math` | Math function precision (22 ops) | ~6 bits | 0.95 |
-| `intl` | Locale, timezone, numbering system | ~5 bits | 0.85 |
-| `cssFeatures` | CSS.supports() for 20 features | ~4 bits | 0.80 |
-| `permissions` | Permission states for 14 APIs | ~5 bits | 0.65 |
-| `speech` | Available TTS voices | ~10 bits | 0.90 |
-| `domRect` | getBoundingClientRect precision | ~6 bits | 0.75 |
-| `svg` | SVG rendering + text BBox | ~7 bits | 0.80 |
-| `webrtc` | ICE candidate types | ~4 bits | 0.50 |
-| `hardwarePerf` | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
+| [`canvas`](/guide/collectors/canvas) | 2D rendering, gradients, emoji | ~10 bits | 0.85 |
+| [`webgl`](/guide/collectors/webgl) | GPU vendor/renderer, extensions, limits | ~12 bits | 0.95 |
+| [`audio`](/guide/collectors/audio) | OfflineAudioContext oscillator | ~8 bits | 0.80 |
+| [`fonts`](/guide/collectors/fonts) | 48 font families via measureText | ~12 bits | 0.90 |
+| [`screen`](/guide/collectors/screen) | Resolution, DPR, HDR, color gamut | ~6 bits | 0.70 |
+| [`navigator`](/guide/collectors/navigator) | UA, platform, languages, memory | ~8 bits | 0.75 |
+| [`timing`](/guide/collectors/timing) | Timer precision, timezone | ~5 bits | 0.60 |
+| [`media`](/guide/collectors/media) | Video/audio codec support | ~7 bits | 0.85 |
+| [`storage`](/guide/collectors/storage) | Storage availability, quota | ~4 bits | 0.60 |
+| [`network`](/guide/collectors/network) | Connection type, RTT, downlink | ~3 bits | 0.30 |
+| [`gpu`](/guide/collectors/gpu) | WebGPU adapter info, features | ~10 bits | 0.90 |
+| [`math`](/guide/collectors/math) | Math function precision (22 ops) | ~6 bits | 0.95 |
+| [`intl`](/guide/collectors/intl) | Locale, timezone, numbering system | ~5 bits | 0.85 |
+| [`cssFeatures`](/guide/collectors/css-features) | CSS.supports() for 20 features | ~4 bits | 0.80 |
+| [`permissions`](/guide/collectors/permissions) | Permission states for 14 APIs | ~5 bits | 0.65 |
+| [`speech`](/guide/collectors/speech) | Available TTS voices | ~10 bits | 0.90 |
+| [`domRect`](/guide/collectors/dom-rect) | getBoundingClientRect precision | ~6 bits | 0.75 |
+| [`svg`](/guide/collectors/svg) | SVG rendering + text BBox | ~7 bits | 0.80 |
+| [`webrtc`](/guide/collectors/webrtc) | ICE candidate types | ~4 bits | 0.50 |
+| [`hardwarePerf`](/guide/collectors/hardware-perf) | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
 
 **Total: ~135+ bits of entropy** — enough to uniquely identify >1 billion devices.
 
