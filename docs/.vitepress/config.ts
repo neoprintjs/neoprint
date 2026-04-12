@@ -1,4 +1,8 @@
 import { defineConfig } from 'vitepress'
+import { createRequire } from 'module'
+
+const require = createRequire(import.meta.url)
+const pkg = require('../../package.json')
 
 export default defineConfig({
   title: 'neoprint',
@@ -25,7 +29,7 @@ export default defineConfig({
       { text: 'API', link: '/api/overview' },
       { text: 'Live Demo', link: '/demo/' },
       {
-        text: 'v0.1.0',
+        text: `v${pkg.version}`,
         items: [
           { text: 'Changelog', link: 'https://github.com/neoprintjs/neoprint/blob/main/CHANGELOG.md' },
         ],
