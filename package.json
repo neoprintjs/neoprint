@@ -1,0 +1,58 @@
+{
+  "name": "neoprint",
+  "version": "0.1.0",
+  "description": "Advanced browser fingerprinting library — open-source, modular, and privacy-aware",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "release": "release-it",
+    "release:minor": "release-it minor",
+    "release:major": "release-it major",
+    "release:dry": "release-it --dry-run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "fingerprint",
+    "browser-fingerprint",
+    "fingerprinting",
+    "device-fingerprint",
+    "bot-detection",
+    "fraud-detection",
+    "neoprint"
+  ],
+  "author": "kstawinski",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neoprintjs/neoprint.git"
+  },
+  "devDependencies": {
+    "@release-it/conventional-changelog": "^10.0.6",
+    "release-it": "^19.2.4",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4"
+  }
+}
