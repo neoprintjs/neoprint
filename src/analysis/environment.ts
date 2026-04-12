@@ -31,26 +31,40 @@ function detectOS(ua: string, platform: string): EnvironmentResult['os'] {
   let version = ''
   let spoofed = false
 
-  if (/Windows/.test(ua)) {
-    name = 'Windows'
-    const match = ua.match(/Windows NT (\d+\.\d+)/)
-    version = match?.[1] ?? ''
-  } else if (/Macintosh|Mac OS X/.test(ua)) {
-    name = 'macOS'
-    const match = ua.match(/Mac OS X (\d+[._]\d+[._]?\d*)/)
+  // Check iPhone/iPod first (always identifiable from UA)
+  if (/iPhone|iPod/.test(ua)) {
+    name = 'iOS'
+    const match = ua.match(/OS (\d+[._]\d+[._]?\d*)/)
+    version = match?.[1]?.replace(/_/g, '.') ?? ''
+  } else if (/iPad/.test(ua)) {
+    name = 'iPadOS'
+    const match = ua.match(/OS (\d+[._]\d+[._]?\d*)/)
     version = match?.[1]?.replace(/_/g, '.') ?? ''
   } else if (/Android/.test(ua)) {
     name = 'Android'
     const match = ua.match(/Android (\d+\.?\d*)/)
     version = match?.[1] ?? ''
-  } else if (/iPhone|iPad|iPod/.test(ua)) {
-    name = 'iOS'
-    const match = ua.match(/OS (\d+[._]\d+[._]?\d*)/)
-    version = match?.[1]?.replace(/_/g, '.') ?? ''
-  } else if (/Linux/.test(ua)) {
-    name = 'Linux'
+  } else if (/Macintosh|Mac OS X/.test(ua)) {
+    // iPadOS 13+ sends a macOS-like UA. Detect via touch + non-macOS screen.
+    const hasTouch = navigator.maxTouchPoints > 1
+    const isMobileScreen = Math.min(screen.width, screen.height) < 1400
+    if (hasTouch && isMobileScreen) {
+      name = 'iPadOS'
+      const match = ua.match(/Mac OS X (\d+[._]\d+[._]?\d*)/)
+      version = match?.[1]?.replace(/_/g, '.') ?? ''
+    } else {
+      name = 'macOS'
+      const match = ua.match(/Mac OS X (\d+[._]\d+[._]?\d*)/)
+      version = match?.[1]?.replace(/_/g, '.') ?? ''
+    }
+  } else if (/Windows/.test(ua)) {
+    name = 'Windows'
+    const match = ua.match(/Windows NT (\d+\.\d+)/)
+    version = match?.[1] ?? ''
   } else if (/CrOS/.test(ua)) {
     name = 'ChromeOS'
+  } else if (/Linux/.test(ua)) {
+    name = 'Linux'
   }
 
   // Cross-check platform vs UA
