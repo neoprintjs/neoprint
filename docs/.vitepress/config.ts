@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'neoprint',
   description: 'Advanced browser fingerprinting library',
-  base: '/neoprint/',
+  base: '/',
 
   head: [
     ['meta', { name: 'theme-color', content: '#1d4ed8' }],
