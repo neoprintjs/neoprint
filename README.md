@@ -18,7 +18,7 @@ Neoprint collects 19+ browser signals, computes a stable device identifier, and 
 - [API](#api)
 - [Behavioral biometrics](#behavioral-biometrics)
 - [Session linking](#session-linking)
-- [Three IDs for different use cases](#three-ids-for-different-use-cases)
+- [Four IDs for different use cases](#three-ids-for-different-use-cases)
 - [Noise detection](#noise-detection)
 - [Incognito detection](#incognito-detection)
 - [Protocol-aware collection](#protocol-aware-collection)
@@ -288,7 +288,7 @@ await session.clear()
 
 ---
 
-## Three IDs for different use cases
+## Four IDs for different use cases
 
 Neoprint generates three separate fingerprint IDs to solve the most common complaints about fingerprinting libraries:
 
