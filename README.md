@@ -377,7 +377,48 @@ The server receives:
 }
 ```
 
-Your server can cross-reference `environment.platform` and `environment.languages` with the HTTP `User-Agent` and `Accept-Language` headers to detect client-side manipulation.
+**Node.js validation example:**
+
+```js
+app.post('/api/validate', (req, res) => {
+  const hints = req.body
+  const ua = req.headers['user-agent'] || ''
+  const acceptLang = req.headers['accept-language'] || ''
+  const flags = []
+
+  // 1. Platform vs User-Agent
+  const { platform } = hints.environment
+  if (platform === 'MacIntel' && !ua.includes('Mac')) flags.push('platform_mismatch')
+  if (platform === 'Win32' && !ua.includes('Windows')) flags.push('platform_mismatch')
+  if (platform === 'Linux' && !ua.includes('Linux')) flags.push('platform_mismatch')
+
+  // 2. Languages vs Accept-Language
+  const primaryLang = hints.environment.languages[0]
+  if (primaryLang && !acceptLang.toLowerCase().includes(primaryLang.toLowerCase().split('-')[0])) {
+    flags.push('language_mismatch')
+  }
+
+  // 3. Fingerprint age
+  const ageMs = Date.now() - hints.timestamp
+  if (ageMs > 30000) flags.push('stale_fingerprint')
+
+  // 4. Checksum consistency (compare with stored previous visit)
+  const stored = db.get(hints.fingerprintId)
+  if (stored && stored.checksums.canvas !== hints.collectorChecksums.canvas) {
+    flags.push('checksum_changed')
+  }
+
+  // 5. Store for future comparison
+  db.set(hints.fingerprintId, { checksums: hints.collectorChecksums, ua, timestamp: Date.now() })
+
+  res.json({
+    trusted: flags.length === 0,
+    flags,
+    fingerprintId: hints.fingerprintId,
+    stableId: hints.stableId,
+  })
+})
+```
 
 ---
 
