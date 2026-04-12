@@ -18,13 +18,9 @@
 export async function detectIncognito(): Promise<{
   isIncognito: boolean
   signals: string[]
-  debug: { quotaGB?: number; browser?: string; languagesCount?: number; voicesCount?: number }
 }> {
   const signals: string[] = []
-  const debug: { quotaGB?: number; browser?: string; languagesCount?: number; voicesCount?: number } = {}
-
   const browser = detectBrowserType()
-  debug.browser = browser
 
   // 1. Storage quota
   // Chrome: normal ~10GB, incognito ~4GB → threshold 6GB
@@ -34,8 +30,6 @@ export async function detectIncognito(): Promise<{
       const est = await navigator.storage.estimate()
       if (est.quota != null) {
         const quotaGB = est.quota / (1024 * 1024 * 1024)
-        debug.quotaGB = Math.round(quotaGB * 100) / 100
-
         const threshold = browser === 'safari' ? 20 : 6
         if (quotaGB < threshold) {
           signals.push('low_storage_quota')
@@ -50,7 +44,6 @@ export async function detectIncognito(): Promise<{
   // Normal Chrome has 4+ language entries, incognito strips to 1
   if (browser === 'chrome' || browser === 'edge') {
     const count = navigator.languages?.length ?? 0
-    debug.languagesCount = count
     if (count <= 1) {
       signals.push('languages_trimmed')
     }
@@ -71,7 +64,6 @@ export async function detectIncognito(): Promise<{
           setTimeout(() => resolve(speechSynthesis.getVoices()), 300)
         })
       }
-      debug.voicesCount = voices.length
       if (voices.length === 0) {
         signals.push('no_speech_voices')
       }
@@ -99,7 +91,7 @@ export async function detectIncognito(): Promise<{
   // Any signal is a strong indicator — these are all measured, not guessed
   const isIncognito = signals.length >= 1
 
-  return { isIncognito, signals, debug }
+  return { isIncognito, signals }
 }
 
 function detectBrowserType(): string {

@@ -10,7 +10,6 @@ Detect private / incognito browsing mode.
 function detectIncognito(): Promise<{
   isIncognito: boolean
   signals: string[]
-  debug: { quotaGB?: number; browser?: string; languagesCount?: number; voicesCount?: number }
 }>
 ```
 
@@ -18,7 +17,6 @@ function detectIncognito(): Promise<{
 
 - `isIncognito` — `true` if any strong signal detected
 - `signals` — which heuristics triggered
-- `debug` — raw values for diagnostics
 
 ## Detection by Browser
 
@@ -39,12 +37,8 @@ const result = await neoprint.detectIncognito()
 if (result.isIncognito) {
   console.log('Private browsing:', result.signals)
 }
-
-// Debug: see raw quota and browser detection
-console.log(result.debug.quotaGB)  // e.g. 4.0 in incognito, 10.0 in normal
-console.log(result.debug.browser)  // 'chrome' | 'safari' | 'firefox' | ...
 ```
 
 ## Limitations
 
-Safari has been the most aggressive at patching detection methods. The current approach is based on real-world measurements (2026) and may need recalibration as browsers evolve. Chrome on `localhost` reports lower quota than on real domains — thresholds are calibrated accordingly.
+Safari has been the most aggressive at patching detection methods. The current approach is based on real-world measurements (2026) and may need recalibration as browsers evolve. Chrome on `localhost` reports lower quota than on real domains.
