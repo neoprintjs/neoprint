@@ -1,5 +1,7 @@
 ---
 layout: home
+title: neoprint — Open-Source Browser Fingerprinting Library
+titleTemplate: false
 
 hero:
   name: neoprint

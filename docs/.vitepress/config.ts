@@ -2,13 +2,21 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'neoprint',
-  description: 'Advanced browser fingerprinting library',
+  titleTemplate: ':title — neoprint | Open-Source Browser Fingerprinting Library',
+  description: 'Advanced open-source browser fingerprinting library with cross-browser identification, anti-detect detection, bot detection, and behavioral biometrics. Zero dependencies, TypeScript, modular.',
   base: '/',
 
   head: [
     ['meta', { name: 'theme-color', content: '#1d4ed8' }],
-    ['meta', { property: 'og:title', content: 'neoprint' }],
-    ['meta', { property: 'og:description', content: 'Advanced browser fingerprinting library — open-source, modular, privacy-aware' }],
+    ['meta', { name: 'keywords', content: 'browser fingerprint, fingerprinting, device fingerprint, bot detection, anti-detect, cross-browser identification, fraud detection, neoprint, typescript' }],
+    ['meta', { property: 'og:title', content: 'neoprint — Open-Source Browser Fingerprinting Library' }],
+    ['meta', { property: 'og:description', content: 'Advanced browser fingerprinting with cross-browser ID, anti-detect detection, bot detection, behavioral biometrics. Zero dependencies.' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:url', content: 'https://neoprint.dev' }],
+    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { name: 'twitter:title', content: 'neoprint — Open-Source Browser Fingerprinting Library' }],
+    ['meta', { name: 'twitter:description', content: 'Advanced browser fingerprinting with cross-browser ID, anti-detect detection, bot detection, behavioral biometrics. Zero dependencies.' }],
+    ['link', { rel: 'canonical', href: 'https://neoprint.dev' }],
   ],
 
   themeConfig: {
