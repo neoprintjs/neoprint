@@ -1,0 +1,48 @@
+# neoprint
+
+> Open-source browser fingerprinting library. 19 signal collectors, 4 ID strategies, cross-browser identification, anti-detect browser detection, bot detection, behavioral biometrics. TypeScript, zero dependencies.
+
+- Package: @neoprintjs/core
+- Repository: https://github.com/neoprintjs/neoprint
+- Docs: https://neoprint.dev
+- npm: https://www.npmjs.com/package/@neoprintjs/core
+
+## Guide
+
+- [What is neoprint?](https://neoprint.dev/guide/what-is-neoprint) — Overview, key differentiators, technical specs
+- [Getting Started](https://neoprint.dev/guide/getting-started) — Installation, quick start, Fingerprint object structure
+- [Why neoprint?](https://neoprint.dev/guide/comparison) — Feature comparison table, common complaints solved
+- [Fingerprint IDs](https://neoprint.dev/guide/fingerprint-ids) — 4 ID strategies: full, stable, weighted, cross-browser
+- [Collectors](https://neoprint.dev/guide/collectors) — 19 built-in collectors with entropy/stability table
+- [Confidence & Entropy](https://neoprint.dev/guide/confidence) — Scoring formula, when to trust a fingerprint
+- [Cross-Browser ID](https://neoprint.dev/guide/cross-browser) — Hardware signal normalization, excluded signals
+- [Anti-Detect Detection](https://neoprint.dev/guide/anti-detect) — Supported tools, detection methods
+- [Fingerprint Lifecycle](https://neoprint.dev/guide/lifecycle) — Drift tracking, auto-linking, stability report
+- [Bot Detection](https://neoprint.dev/guide/bot-detection) — 30+ signals, score thresholds
+- [Spoofing Detection](https://neoprint.dev/guide/spoofing) — Cross-signal inconsistency rules
+- [Behavioral Biometrics](https://neoprint.dev/guide/behavior) — Typing, mouse, scroll, touch profiling
+- [Session Linking](https://neoprint.dev/guide/sessions) — Multi-storage persistence, fallback behavior
+- [Server Validation](https://neoprint.dev/guide/server-hints) — Checksums, environment cross-referencing
+- [Privacy Mode](https://neoprint.dev/guide/privacy) — GDPR considerations, 3 collection modes
+- [Plugin System](https://neoprint.dev/guide/plugins) — Custom collectors, plugin interface
+
+## API
+
+- [API Overview](https://neoprint.dev/api/overview) — All methods, named exports, quick reference table
+- [get()](https://neoprint.dev/api/get) — Generate fingerprint, options, return type
+- [compare()](https://neoprint.dev/api/compare) — Fuzzy fingerprint comparison
+- [detectBot()](https://neoprint.dev/api/detect-bot) — Bot/automation detection
+- [detectSpoofing()](https://neoprint.dev/api/detect-spoofing) — Tampering detection
+- [detectAntiDetect()](https://neoprint.dev/api/detect-anti-detect) — Anti-detect browser detection
+- [detectNoise()](https://neoprint.dev/api/detect-noise) — Canvas/audio noise injection
+- [detectIncognito()](https://neoprint.dev/api/detect-incognito) — Private browsing detection
+- [environment()](https://neoprint.dev/api/environment) — OS/browser/VM/privacy profiling
+- [lifecycle()](https://neoprint.dev/api/lifecycle) — Drift tracking, auto-linking
+- [behavior](https://neoprint.dev/api/behavior) — Behavioral biometrics
+- [serverHints()](https://neoprint.dev/api/server-hints) — Server validation payload
+- [createSession()](https://neoprint.dev/api/session) — Cross-session persistence
+- [Types](https://neoprint.dev/api/types) — All TypeScript type definitions
+
+## Demo
+
+- [Live Demo](https://neoprint.dev/demo/) — Interactive fingerprint scanner in browser
