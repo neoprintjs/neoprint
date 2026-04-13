@@ -2,7 +2,7 @@
 
 **Advanced browser fingerprinting library** — open-source, modular, and privacy-aware.
 
-Neoprint collects 20 browser signals, computes a stable device identifier, and provides spoofing detection, bot detection, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
+Neoprint collects 20 browser signals, computes a stable device identifier, and provides fingerprint intelligence — spoofing heuristics, bot signal analysis, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
 
 [![npm version](https://img.shields.io/npm/v/@neoprintjs/core.svg)](https://www.npmjs.com/package/@neoprintjs/core)
 [![CI](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml/badge.svg)](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml)
@@ -24,8 +24,8 @@ Neoprint collects 20 browser signals, computes a stable device identifier, and p
 - [Incognito detection](#incognito-detection)
 - [Protocol-aware collection](#protocol-aware-collection)
 - [Server-side validation](#server-side-validation)
-- [Anti-detect browser detection](#anti-detect-browser-detection)
-- [Device attestation](#device-attestation)
+- [Anti-detect heuristics](#anti-detect-browser-detection)
+- [Client-side risk scoring](#device-attestation)
 - [Fingerprint lifecycle](#fingerprint-lifecycle)
 - [Privacy mode](#privacy-mode)
 - [Custom collectors (plugin system)](#custom-collectors-plugin-system)
@@ -51,14 +51,14 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 | Signal count | ~10-15 | **20 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
 | Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari, Edge** |
-| Anti-detect browser detection | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
+| Anti-detect heuristics | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
 | Fingerprint lifecycle | No | **Drift prediction, auto-linking, decay rate** |
-| Device attestation | No | **Single trust score + integrity token** |
+| Client-side risk scoring | No | **Single trust score + integrity token** |
 | Hardware profiling | No | **CPU micro-benchmarks (silicon lottery)** |
 | Web Worker offloading | No | **Auto-offloads heavy work to background thread** |
 | Confidence scoring | No | **Per-collector stability + overall score** |
 | Spoofing detection | No | **Cross-signal inconsistency analysis** |
-| Bot detection | No | **30+ automation signals** |
+| Heuristic bot signals | No | **30+ heuristic signals** |
 | Noise detection | No | **Canvas/audio noise injection detection** |
 | Incognito resistance | No (different hash) | **Same hash in normal and incognito** |
 | Protocol-aware | No (HTTP != HTTPS) | **Auto-excludes HTTPS-only APIs on HTTP** |
@@ -193,7 +193,7 @@ console.log(bot.score)    // 0.0 – 1.0
 console.log(bot.signals)  // ['webdriver_present', 'headless_chrome', ...]
 ```
 
-**Checks 30+ signals** including:
+**Checks 30+ heuristic signals** including:
 - `navigator.webdriver`
 - Phantom, Selenium, Puppeteer, Playwright, Nightmare global variables
 - Chrome DevTools Protocol (`$cdc_`) markers
@@ -457,7 +457,7 @@ app.post('/api/validate', (req, res) => {
 
 ---
 
-## Anti-detect browser detection
+## Anti-detect heuristics
 
 Detect fraudulent anti-detect browsers used for multi-accounting, ad fraud, and credential stuffing. No other open-source library offers this.
 
@@ -491,9 +491,9 @@ console.log(result.signals)      // ['electron_shell', 'navigator_prototype_tamp
 
 ---
 
-## Device attestation
+## Client-side risk scoring
 
-Single API call answering "can I trust this request?" Combines bot detection, spoofing analysis, anti-detect checks, hardware validation, and signal consistency into one weighted score.
+Single API call for client-side risk assessment. Combines bot heuristics, spoofing analysis, anti-detect checks, hardware validation, and signal consistency into one weighted score. Note: this is a client-side heuristic — for production security, combine with server-side validation.
 
 ```ts
 const fp = await neoprint.get()

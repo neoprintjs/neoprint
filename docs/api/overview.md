@@ -41,7 +41,7 @@ import {
 | `neoprint.compare(fp1, fp2)` | `CompareResult` | Fuzzy comparison |
 | `neoprint.detectSpoofing(fp)` | `SpoofingResult` | Cross-signal inconsistency check |
 | `neoprint.detectBot(fp?)` | `BotResult` | Automation detection |
-| `neoprint.detectAntiDetect(fp?)` | `AntiDetectResult` | Anti-detect browser detection |
+| `neoprint.detectAntiDetect(fp?)` | `AntiDetectResult` | Anti-detect heuristics |
 | `neoprint.detectNoise()` | `Promise<NoiseReport[]>` | Canvas/audio noise detection |
 | `neoprint.detectIncognito()` | `Promise<{isIncognito, signals}>` | Private browsing detection |
 | `neoprint.attestDevice(fp, options?)` | `Promise<AttestResult>` | Single trust score with integrity token |

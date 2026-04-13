@@ -72,7 +72,7 @@ Stresses ALU and cache lines with 64x64 matrix multiply using Float64Arrays.
 
 Stability is lower than other collectors because timing varies with system load. However, the relative ratios between benchmarks are more stable than absolute values.
 
-## Role in device attestation
+## Role in risk scoring
 
 The `attestDevice` function checks that hardware perf timings are realistic:
 - All benchmarks should complete in > 0ms (instant = emulated environment)

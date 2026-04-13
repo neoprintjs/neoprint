@@ -161,8 +161,8 @@ function preview(v: unknown): string {
 
       <!-- SECURITY -->
       <template v-if="tab === 'security'">
-        <div class="np-heading">Bot detection</div>
-        <div class="np-desc">Checks for Puppeteer, Playwright, Selenium, headless Chrome, and 30+ automation signals.</div>
+        <div class="np-heading">Heuristic bot signals</div>
+        <div class="np-desc">Checks for Puppeteer, Playwright, Selenium, headless Chrome, and 30+ heuristic signals.</div>
         <div class="np-sec-grid" v-if="bot">
           <div class="np-sec-item">
             <div class="np-sec-item-label">Status</div>
@@ -177,8 +177,8 @@ function preview(v: unknown): string {
           <span v-for="s in bot.signals" :key="s" class="np-signal">{{ s }}</span>
         </div>
 
-        <div class="np-heading">Anti-detect browser</div>
-        <div class="np-desc">Detects Multilogin, GoLogin, Dolphin Anty, and other anti-detect tools via prototype tampering and inconsistencies.</div>
+        <div class="np-heading">Anti-detect heuristics</div>
+        <div class="np-desc">Checks for Multilogin, GoLogin, Dolphin Anty, and other anti-detect tool signatures via prototype tampering and inconsistency analysis.</div>
         <div class="np-sec-grid" v-if="ad">
           <div class="np-sec-item">
             <div class="np-sec-item-label">Status</div>

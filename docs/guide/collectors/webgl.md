@@ -60,7 +60,7 @@ WebGL data is used in the `crossBrowserId` calculation, but with normalization:
 
 This normalization ensures Chrome's `ANGLE (Apple, ANGLE Metal Renderer: Apple M4, ...)` and Safari's `Apple GPU` both resolve to the same hardware identity.
 
-## Role in anti-detect detection
+## Role in anti-detect heuristics
 
 WebGL parameters are key to detecting anti-detect browsers:
 

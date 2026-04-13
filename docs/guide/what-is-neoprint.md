@@ -28,7 +28,7 @@ Detect Multilogin, GoLogin, Dolphin Anty, and other fraud tools via prototype ch
 Track how fingerprints evolve. When a browser updates and the hash changes, neoprint **auto-links** the old and new fingerprints with a probability score.
 
 ### Everything Else
-Bot detection (30+ signals), behavioral biometrics, noise detection, incognito resistance, server-side validation, plugin system, privacy mode — all included, all free.
+Heuristic bot signals (30+ checks), behavioral biometrics, noise detection, incognito resistance, server-side validation hints, plugin system, privacy mode — all included, all free.
 
 ## Technical Overview
 

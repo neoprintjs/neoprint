@@ -7,11 +7,11 @@
 | Signal count | ~10-15 | **20 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
 | Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari, Edge** |
-| Anti-detect browser detection | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
+| Anti-detect heuristics | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
 | Fingerprint lifecycle | No | **Drift prediction, auto-linking, decay rate** |
 | Confidence scoring | No | **Per-collector stability + overall score** |
 | Spoofing detection | No | **Cross-signal inconsistency analysis** |
-| Bot detection | No | **30+ automation signals** |
+| Heuristic bot signals | No | **30+ heuristic signals** |
 | Noise detection | No | **Canvas/audio noise injection detection** |
 | Incognito resistance | No (different hash) | **Same hash in normal and incognito** |
 | Protocol-aware | No (HTTP != HTTPS) | **Auto-excludes HTTPS-only APIs on HTTP** |

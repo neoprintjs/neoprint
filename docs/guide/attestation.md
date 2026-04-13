@@ -1,6 +1,6 @@
-# Device Attestation
+# Client-Side Risk Scoring
 
-Single API call answering "can I trust this request?" Instead of manually combining bot detection, spoofing analysis, anti-detect checks, and hardware validation, `attestDevice` does it all with a weighted scoring system.
+Single API call for client-side risk assessment. Instead of manually combining bot heuristics, spoofing analysis, anti-detect checks, and hardware validation, `attestDevice` does it all with a weighted scoring system. This is a heuristic — for production security, combine with server-side validation.
 
 ## Usage
 
