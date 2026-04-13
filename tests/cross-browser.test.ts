@@ -30,8 +30,17 @@ describe('computeCrossBrowserId', () => {
       const safari: FingerprintComponents = {
         webgl: comp({ vendor: 'Apple Inc.', renderer: 'Apple M4', maxTextureSize: 16384 }),
       }
-      // Both should extract "Apple" as vendor and "Apple M4" as renderer
       expect(computeCrossBrowserId(chrome)).toBe(computeCrossBrowserId(safari))
+    })
+
+    it('normalizes Intel GPU model numbers (620 vs 400 from Firefox)', () => {
+      const chrome: FingerprintComponents = {
+        webgl: comp({ vendor: 'Google Inc. (Intel)', renderer: 'ANGLE (Intel, Intel(R) HD Graphics 620 (0x00005916) Direct3D11 vs_5_0 ps_5_0, D3D11)', maxTextureSize: 16384 }),
+      }
+      const firefox: FingerprintComponents = {
+        webgl: comp({ vendor: 'Google Inc. (Intel)', renderer: 'ANGLE (Intel, Intel(R) HD Graphics 400 Direct3D11 vs_5_0 ps_5_0), or similar', maxTextureSize: 16384 }),
+      }
+      expect(computeCrossBrowserId(chrome)).toBe(computeCrossBrowserId(firefox))
     })
 
     it('normalizes vendor suffix (Inc., Corporation)', () => {
@@ -94,23 +103,28 @@ describe('computeCrossBrowserId', () => {
     })
   })
 
-  describe('Speech normalization', () => {
-    it('uses language set instead of voice names/count', () => {
-      const chrome: FingerprintComponents = {
+  describe('Speech exclusion', () => {
+    it('ignores speech entirely (too unstable cross-browser)', () => {
+      const withSpeech: FingerprintComponents = {
         speech: comp([
           { name: 'Voice A', lang: 'en-US', localService: true },
-          { name: 'Voice B', lang: 'en-US', localService: true },
-          { name: 'Voice C', lang: 'pl-PL', localService: true },
+          { name: 'Voice B', lang: 'pl-PL', localService: true },
         ]),
       }
-      const safari: FingerprintComponents = {
-        speech: comp([
-          { name: 'Different Name', lang: 'en-US', localService: true },
-          { name: 'Other Voice', lang: 'pl-PL', localService: true },
-        ]),
+      const withoutSpeech: FingerprintComponents = {}
+      expect(computeCrossBrowserId(withSpeech)).toBe(computeCrossBrowserId(withoutSpeech))
+    })
+  })
+
+  describe('Font normalization', () => {
+    it('excludes browser-bundled fonts (Edge Roboto)', () => {
+      const chrome: FingerprintComponents = {
+        fonts: comp(['Arial', 'Courier New', 'Georgia', 'Times New Roman']),
       }
-      // Same languages, different voice names/count — should match
-      expect(computeCrossBrowserId(chrome)).toBe(computeCrossBrowserId(safari))
+      const edge: FingerprintComponents = {
+        fonts: comp(['Arial', 'Courier New', 'Georgia', 'Roboto', 'Times New Roman']),
+      }
+      expect(computeCrossBrowserId(chrome)).toBe(computeCrossBrowserId(edge))
     })
   })
 

@@ -6,16 +6,18 @@ import { murmurhash3 } from '../core/hash.js'
  * that are independent of the browser engine.
  *
  * All values are normalized to account for browser-specific differences:
- * - WebGL: ANGLE wrapper strings are stripped to extract real GPU name
- * - Math: rounded to 8 significant digits (V8 vs JSC precision diffs)
+ * - WebGL: ANGLE wrapper stripped, GPU family extracted, PCI IDs removed
+ * - Math: rounded to 8 significant digits (V8 vs JSC vs SpiderMonkey)
  * - Screen: colorDepth/pixelDepth excluded (Chrome 30 vs Safari 24)
  * - Intl: locale normalized to base language (pl vs pl-PL)
  * - Navigator: hardwareConcurrency & deviceMemory excluded (Safari caps/hides)
+ * - Fonts: browser-bundled fonts filtered out (Edge adds Roboto)
+ * - Speech: excluded (voice lists differ too much between engines on Windows)
  */
 export function computeCrossBrowserId(components: FingerprintComponents): string {
   const signals: Record<string, unknown> = {}
 
-  // GPU — normalize ANGLE wrapper strings
+  // GPU — normalize ANGLE wrapper strings and extract GPU family
   const webgl = components.webgl?.value as any
   if (webgl) {
     signals.gpu = {
@@ -35,7 +37,7 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Math precision — round to 8 significant digits to absorb V8/JSC diffs
+  // Math precision — round to 8 significant digits to absorb engine diffs
   const math = components.math?.value as any
   if (math) {
     signals.math = {
@@ -84,14 +86,13 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Fonts — installed at OS level
+  // Fonts — filter out browser-bundled fonts (Edge adds Roboto, etc.)
   const fonts = components.fonts?.value
   if (Array.isArray(fonts)) {
-    signals.fonts = fonts
+    signals.fonts = fonts.filter((f: string) => !BROWSER_BUNDLED_FONTS.has(f))
   }
 
   // Hardware — only truly consistent signals
-  // Excluded: hardwareConcurrency (Safari caps to 8), deviceMemory (Safari doesn't expose)
   const nav = components.navigator?.value as any
   if (nav) {
     signals.hardware = {
@@ -108,20 +109,11 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Speech voices — use only unique language set (not voice names/count)
-  // Chrome exposes more voices as localService than Safari on the same OS,
-  // but the set of supported languages is identical.
-  const speech = components.speech?.value
-  if (Array.isArray(speech)) {
-    const localLangs = [...new Set(
-      speech
-        .filter((v: any) => v.localService)
-        .map((v: any) => v.lang as string)
-    )].sort()
-    if (localLangs.length > 0) {
-      signals.speechLangs = localLangs
-    }
-  }
+  // Speech is EXCLUDED from cross-browser ID:
+  // - Chrome/Edge/Firefox expose completely different voice lists on Windows
+  // - Firefox adds desktop voices (Zira) that Chrome/Edge hide
+  // - Voice count varies wildly (Chrome 21, Edge 25, Firefox 4)
+  // The signal is too unstable across browser engines to be useful here.
 
   // Hash
   const json = JSON.stringify(signals, Object.keys(signals).sort())
@@ -134,41 +126,95 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
 }
 
 /**
+ * Fonts that specific browsers bundle/register but aren't OS-installed.
+ * These differ per browser on the same machine, so exclude them.
+ */
+const BROWSER_BUNDLED_FONTS = new Set([
+  'Roboto',           // Edge bundles Roboto
+  'Noto Sans',        // Chrome may register Noto
+  'Noto Color Emoji', // Chrome
+])
+
+/**
  * Normalize GPU vendor strings.
  * Chrome ANGLE: "Google Inc. (Apple)" → "Apple"
+ * Chrome ANGLE: "Google Inc. (Intel)" → "Intel"
  * Safari: "Apple Inc." → "Apple"
  */
 function normalizeGpuVendor(vendor: string | null): string {
   if (!vendor) return ''
-  // Extract real vendor from ANGLE wrapper: "Google Inc. (Apple)" → "Apple"
   const angleMatch = vendor.match(/\(([^)]+)\)/)
   if (angleMatch) return angleMatch[1]!.trim()
-  // Strip common suffixes
   return vendor.replace(/\s*(Inc\.|Corporation|Ltd\.?|Co\.?)$/i, '').trim()
 }
 
 /**
  * Normalize GPU renderer strings.
- * Chrome ANGLE: "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)" → "Apple M4"
- * Safari: "Apple GPU" → "Apple GPU"
- * Firefox: "Apple M4" → "Apple M4"
+ *
+ * Extracts the GPU family name, stripping:
+ * - ANGLE wrapper
+ * - PCI device IDs: (0x00005916)
+ * - Driver API details: Direct3D11 vs_5_0 ps_5_0
+ * - D3D/OpenGL version suffix
+ * - Firefox's ", or similar" suffix
+ * - "(R)" trademark symbols
+ *
+ * Examples:
+ *   Chrome:  "ANGLE (Intel, Intel(R) HD Graphics 620 (0x00005916) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+ *   Edge:    "ANGLE (Intel, Intel(R) HD Graphics 620 (0x00005916) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+ *   Firefox: "ANGLE (Intel, Intel(R) HD Graphics 400 Direct3D11 vs_5_0 ps_5_0), or similar"
+ *   All → "Intel HD Graphics"
+ *
+ *   Chrome:  "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)"
+ *   Safari:  "Apple GPU"
+ *   All → "Apple M4" / "Apple GPU"
  */
 function normalizeGpuRenderer(renderer: string | null): string {
   if (!renderer) return ''
 
-  // ANGLE format: "ANGLE (Vendor, ANGLE Metal/OpenGL Renderer: Chip Name, Version)"
-  const angleMatch = renderer.match(/ANGLE\s*\([^,]+,\s*ANGLE\s+\w+\s+Renderer:\s*([^,]+)/i)
-  if (angleMatch) return angleMatch[1]!.trim()
+  let chip = renderer
 
-  // Another ANGLE format: "ANGLE (Vendor, Chip Name, OpenGL version)"
-  const angleMatch2 = renderer.match(/ANGLE\s*\([^,]+,\s*([^,]+)/)
-  if (angleMatch2) {
-    const chip = angleMatch2[1]!.trim()
-    // Skip if it just says "ANGLE Metal Renderer" without a chip name
-    if (!chip.toLowerCase().startsWith('angle')) return chip
+  // ANGLE format: "ANGLE (Vendor, ANGLE Metal/OpenGL Renderer: Chip Name, Version)"
+  const angleRendererMatch = renderer.match(/ANGLE\s*\([^,]+,\s*ANGLE\s+\w+\s+Renderer:\s*([^,]+)/i)
+  if (angleRendererMatch) {
+    chip = angleRendererMatch[1]!.trim()
+  } else {
+    // Direct3D ANGLE format: "ANGLE (Vendor, ChipName ...D3D stuff..., D3D11)"
+    const angleD3DMatch = renderer.match(/ANGLE\s*\([^,]+,\s*(.+?)(?:,\s*D3D\d+)?\s*\)/)
+    if (angleD3DMatch) {
+      chip = angleD3DMatch[1]!.trim()
+    }
   }
 
-  return renderer.trim()
+  // Strip Firefox ", or similar" suffix
+  chip = chip.replace(/,?\s*or similar$/i, '')
+
+  // Strip PCI device IDs: (0x00005916)
+  chip = chip.replace(/\s*\(0x[0-9a-fA-F]+\)/g, '')
+
+  // Strip Direct3D/OpenGL driver details: "Direct3D11 vs_5_0 ps_5_0"
+  chip = chip.replace(/\s*Direct3D\d*\s*(vs_\d+_\d+\s*ps_\d+_\d+)?/gi, '')
+  chip = chip.replace(/\s*OpenGL\s+ES\s+[\d.]+/gi, '')
+  chip = chip.replace(/\s*OpenGL\s+[\d.]+/gi, '')
+
+  // Strip "(R)" and "(TM)" trademark symbols
+  chip = chip.replace(/\(R\)/gi, '')
+  chip = chip.replace(/\(TM\)/gi, '')
+
+  // Strip GPU model numbers to get family only:
+  // "Intel HD Graphics 620" → "Intel HD Graphics"
+  // "Intel UHD Graphics 630" → "Intel UHD Graphics"
+  // "NVIDIA GeForce RTX 4090" → "NVIDIA GeForce RTX"
+  // "AMD Radeon RX 580" → "AMD Radeon RX"
+  // But keep: "Apple M4", "Apple GPU", "Mali-G78"
+  chip = chip.replace(/^(Intel\s+(?:U?HD|Iris|Iris\s+Plus|Iris\s+Pro|Iris\s+Xe)\s+Graphics)\s+\d+.*$/i, '$1')
+  chip = chip.replace(/^(NVIDIA\s+GeForce\s+\w+)\s+\d+.*$/i, '$1')
+  chip = chip.replace(/^(AMD\s+Radeon\s+\w+)\s+\d+.*$/i, '$1')
+
+  // Clean up extra spaces
+  chip = chip.replace(/\s+/g, ' ').trim()
+
+  return chip
 }
 
 /**
