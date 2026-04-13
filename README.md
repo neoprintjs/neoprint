@@ -314,7 +314,7 @@ fp.crossBrowserId  // Hardware hash — same ID across Chrome, Firefox, Safari, 
 | `weightedId` | Corporate/school environments | No | No | **Very high** |
 | `crossBrowserId` | Cross-browser identification | **Yes** | **Yes** | Medium |
 
-**Why four?** A single hash changes whenever any signal changes (browser update = new ID = lost user). The `stableId` ignores volatile signals. The `weightedId` prioritizes high-entropy collectors so identical corporate laptops still produce different IDs. The `crossBrowserId` uses only hardware-level signals (GPU family + hardware params, WebGPU limits, CPU math precision, screen resolution, OS fonts, timezone, audio sample rate) with normalization — GPU model numbers stripped, math rounded to 8 digits, browser-bundled fonts filtered, speech/hardwarePerf excluded. Produces the same ID across Chrome, Firefox, Safari, Edge, and Edge.
+**Why four?** A single hash changes whenever any signal changes (browser update = new ID = lost user). The `stableId` ignores volatile signals. The `weightedId` prioritizes high-entropy collectors so identical corporate laptops still produce different IDs. The `crossBrowserId` uses only hardware-level signals (GPU family + hardware params, WebGPU limits, CPU math precision, screen resolution, OS fonts, timezone, audio sample rate) with normalization — GPU model numbers stripped, math rounded to 8 digits, browser-bundled fonts filtered, speech/hardwarePerf excluded. Produces the same ID across Chrome, Firefox, Safari, and Edge.
 
 ---
 
