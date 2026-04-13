@@ -21,11 +21,11 @@ import { svgCollector } from './svg.js'
 import { webrtcCollector } from './webrtc.js'
 import { hardwarePerfCollector } from './hardware-perf.js'
 import { webglRenderCollector } from './webgl-render.js'
+import { shaderPrecisionCollector } from './shader-precision.js'
 
 export const allCollectors: Collector[] = [
   canvasCollector,
   webglCollector,
-  webglRenderCollector,
   audioCollector,
   fontsCollector,
   screenCollector,
@@ -45,12 +45,12 @@ export const allCollectors: Collector[] = [
   webrtcCollector,
   hardwarePerfCollector,
   webglRenderCollector,
+  shaderPrecisionCollector,
 ]
 
 export {
   canvasCollector,
   webglCollector,
-  webglRenderCollector,
   audioCollector,
   fontsCollector,
   screenCollector,
@@ -69,4 +69,6 @@ export {
   svgCollector,
   webrtcCollector,
   hardwarePerfCollector,
+  webglRenderCollector,
+  shaderPrecisionCollector,
 }

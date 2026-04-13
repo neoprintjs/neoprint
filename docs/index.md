@@ -6,7 +6,7 @@ titleTemplate: false
 hero:
   name: neoprint
   text: Advanced Browser Fingerprinting
-  tagline: Open-source, modular, privacy-aware. 21 signals, 4 ID strategies, cross-browser identification, fingerprint intelligence, lifecycle tracking. Zero dependencies.
+  tagline: Open-source, modular, privacy-aware. 22 signals, 4 ID strategies, cross-browser identification, fingerprint intelligence, lifecycle tracking. Zero dependencies.
   actions:
     - theme: brand
       text: Get Started

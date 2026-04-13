@@ -39,5 +39,5 @@ Heuristic bot signals (30+ checks), behavioral biometrics, noise detection, inco
 | **Dependencies** | Zero |
 | **Output** | ESM + CJS |
 | **Tree-shakeable** | Yes |
-| **Collectors** | 21 built-in |
+| **Collectors** | 22 built-in |
 | **License** | MIT |

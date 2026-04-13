@@ -150,6 +150,50 @@ describe('computeCrossBrowserId', () => {
     })
   })
 
+  describe('WebGL render inclusion', () => {
+    it('includes GPU render hash in cross-browser ID', () => {
+      const with_: FingerprintComponents = {
+        webglRender: comp({ hash: 'abc12345', checksum: 999 }),
+      }
+      const without_: FingerprintComponents = {}
+      expect(computeCrossBrowserId(with_)).not.toBe(computeCrossBrowserId(without_))
+    })
+
+    it('same render hash produces same ID', () => {
+      const a: FingerprintComponents = {
+        webglRender: comp({ hash: 'abc12345', checksum: 999 }),
+      }
+      const b: FingerprintComponents = {
+        webglRender: comp({ hash: 'abc12345', checksum: 999 }),
+      }
+      expect(computeCrossBrowserId(a)).toBe(computeCrossBrowserId(b))
+    })
+  })
+
+  describe('Shader precision inclusion', () => {
+    it('includes shader precision in cross-browser ID', () => {
+      const a: FingerprintComponents = {
+        shaderPrecision: comp({ vertex: { highFloat: [127, 127, 23] }, fragment: { highFloat: [127, 127, 23] } }),
+      }
+      const b: FingerprintComponents = {
+        shaderPrecision: comp({ vertex: { highFloat: [62, 62, 16] }, fragment: { highFloat: [62, 62, 16] } }),
+      }
+      expect(computeCrossBrowserId(a)).not.toBe(computeCrossBrowserId(b))
+    })
+  })
+
+  describe('Screen exclusion', () => {
+    it('excludes screen width and height', () => {
+      const a: FingerprintComponents = {
+        screen: comp({ width: 1920, height: 1080, devicePixelRatio: 2, hdr: true, colorGamut: 'p3', touchPoints: 0 }),
+      }
+      const b: FingerprintComponents = {
+        screen: comp({ width: 1710, height: 438, devicePixelRatio: 2, hdr: true, colorGamut: 'p3', touchPoints: 0 }),
+      }
+      expect(computeCrossBrowserId(a)).toBe(computeCrossBrowserId(b))
+    })
+  })
+
   describe('Navigator normalization', () => {
     it('excludes hardwareConcurrency and deviceMemory', () => {
       const chrome: FingerprintComponents = {

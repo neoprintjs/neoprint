@@ -74,6 +74,7 @@ export default defineConfig({
                 { text: 'WebRTC', link: '/guide/collectors/webrtc' },
                 { text: 'Hardware Perf', link: '/guide/collectors/hardware-perf' },
                 { text: 'WebGL Render', link: '/guide/collectors/webgl-render' },
+                { text: 'Shader Precision', link: '/guide/collectors/shader-precision' },
               ],
             },
             { text: 'Confidence & Entropy', link: '/guide/confidence' },

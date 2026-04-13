@@ -2,7 +2,7 @@
 
 **Advanced browser fingerprinting library** — open-source, modular, and privacy-aware.
 
-Neoprint collects 21 browser signals, computes a stable device identifier, and provides fingerprint intelligence — spoofing heuristics, bot signal analysis, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
+Neoprint collects 22 browser signals, computes a stable device identifier, and provides fingerprint intelligence — spoofing heuristics, bot signal analysis, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
 
 [![npm version](https://img.shields.io/npm/v/@neoprintjs/core.svg)](https://www.npmjs.com/package/@neoprintjs/core)
 [![CI](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml/badge.svg)](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml)
@@ -49,7 +49,7 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 
 | Feature | Typical open-source | **neoprint** |
 |---|---|---|
-| Signal count | ~10-15 | **21 built-in** |
+| Signal count | ~10-15 | **22 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
 | Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari, Edge** |
 | Anti-detect heuristics | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
@@ -703,8 +703,9 @@ const similarity = neoprint.compare(restored, newFp)
 | `webrtc` | ICE candidate types (no raw IPs exposed) | ~4 bits | 0.50 |
 | `hardwarePerf` | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
 | `webglRender` | WebGL 3D scene pixel hash (GPU rendering output) | ~8 bits | 0.85 |
+| `shaderPrecision` | WebGL shader precision format (GPU capability) | ~4 bits | 0.95 |
 
-**Total: ~143 bits of theoretical entropy.** Real-world uniqueness is lower due to signal correlation and non-uniform distribution across populations. Effective uniqueness depends on your user base size and diversity.
+**Total: ~147 bits of theoretical entropy.** Real-world uniqueness is lower due to signal correlation and non-uniform distribution across populations. Effective uniqueness depends on your user base size and diversity.
 
 ---
 
@@ -739,7 +740,7 @@ Neoprint is a **client-side heuristic system**, not a security product. Understa
 
 ### Entropy vs real-world uniqueness
 
-The 21 collectors produce ~135 bits of theoretical entropy, but **effective uniqueness is ~30-40 bits** due to:
+The 22 collectors produce ~135 bits of theoretical entropy, but **effective uniqueness is ~30-40 bits** due to:
 - **Signal correlation** — GPU params correlate with GPU vendor, screen resolution correlates with DPR
 - **Non-uniform distribution** — 80%+ of users share common screen resolutions and system fonts
 - **Population matters** — among 100 corporate laptops with identical hardware, effective entropy drops to ~8-10 bits

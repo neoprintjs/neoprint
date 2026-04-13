@@ -1,6 +1,6 @@
 # Collectors
 
-Neoprint ships with 21 built-in collectors. Each independently gathers a browser signal and reports its entropy and stability.
+Neoprint ships with 22 built-in collectors. Each independently gathers a browser signal and reports its entropy and stability.
 
 ## Built-in Collectors
 
@@ -27,8 +27,9 @@ Neoprint ships with 21 built-in collectors. Each independently gathers a browser
 | [`webrtc`](/guide/collectors/webrtc) | ICE candidate types | ~4 bits | 0.50 |
 | [`hardwarePerf`](/guide/collectors/hardware-perf) | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
 | [`webglRender`](/guide/collectors/webgl-render) | WebGL 3D scene pixel hash (GPU rendering output) | ~8 bits | 0.85 |
+| [`shaderPrecision`](/guide/collectors/shader-precision) | WebGL shader precision format (GPU capability) | ~4 bits | 0.95 |
 
-**Total: ~143 bits of theoretical entropy.** Real-world uniqueness is lower due to signal correlation and non-uniform distribution across populations. Effective uniqueness depends on your user base size and diversity.
+**Total: ~147 bits of theoretical entropy.** Real-world uniqueness is lower due to signal correlation and non-uniform distribution across populations. Effective uniqueness depends on your user base size and diversity.
 
 ## Selecting Collectors
 

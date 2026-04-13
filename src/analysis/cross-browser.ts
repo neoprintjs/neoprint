@@ -41,6 +41,13 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
+  // Shader precision — GPU-reported precision for vertex/fragment shaders.
+  // Hardware-dependent, identical across browsers, <1ms.
+  const shaderPrec = components.shaderPrecision?.value as any
+  if (shaderPrec) {
+    signals.shaderPrecision = shaderPrec
+  }
+
   // WebGL rendering hash — actual GPU pixel output, independent of browser engine.
   // Same GPU produces same pixels regardless of Chrome/Safari/Firefox.
   const webglRender = components.webglRender?.value as any

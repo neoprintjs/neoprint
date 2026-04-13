@@ -147,7 +147,7 @@ function preview(v: unknown): string {
       <!-- COLLECTORS -->
       <template v-if="tab === 'collectors'">
         <div class="np-heading">Signal collectors</div>
-        <div class="np-desc">Raw results from each of the 21 signal collectors — timing, entropy, stability, and collected value.</div>
+        <div class="np-desc">Raw results from each of the 22 signal collectors — timing, entropy, stability, and collected value.</div>
         <div class="np-collectors">
           <div v-for="(c, name) in fp.components" :key="name" class="np-collector-card">
             <div class="np-collector-header">
