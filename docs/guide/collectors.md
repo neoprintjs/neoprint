@@ -27,7 +27,7 @@ Neoprint ships with 20 built-in collectors. Each independently gathers a browser
 | [`webrtc`](/guide/collectors/webrtc) | ICE candidate types | ~4 bits | 0.50 |
 | [`hardwarePerf`](/guide/collectors/hardware-perf) | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
 
-**Total: ~135+ bits of entropy** — enough to uniquely identify >1 billion devices.
+**Total: ~135 bits of theoretical entropy.** Real-world uniqueness is lower due to signal correlation and non-uniform distribution across populations. Effective uniqueness depends on your user base size and diversity.
 
 ## Selecting Collectors
 
