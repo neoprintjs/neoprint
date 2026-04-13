@@ -6,14 +6,30 @@ Identify the same user across Chrome, Firefox, Safari, and Edge on the same devi
 
 The `crossBrowserId` uses only **hardware-level signals** that don't change between browsers. All values are **normalized** to absorb browser-specific differences:
 
-- GPU vendor and renderer — ANGLE wrapper strings are stripped to extract the real chip name (e.g. `ANGLE (Apple, ANGLE Metal Renderer: Apple M4, ...)` → `Apple M4`)
-- CPU math precision — rounded to 8 significant digits to absorb V8 vs JavaScriptCore floating-point diffs
-- Screen resolution and DPR — `colorDepth`/`pixelDepth` excluded (Chrome reports 30, Safari reports 24 on the same display)
+- GPU vendor and renderer — ANGLE wrapper stripped, PCI IDs removed, model numbers stripped to family name (e.g. `Intel(R) HD Graphics 620` and `Intel(R) HD Graphics 400` both become `Intel HD Graphics`)
+- CPU math precision — rounded to 8 significant digits (absorbs V8 vs SpiderMonkey vs JSC diffs)
+- Screen resolution and DPR — `colorDepth`/`pixelDepth` excluded (Chrome reports 30, Safari reports 24)
 - Timezone and locale — locale normalized to base language (`pl-PL` → `pl`)
-- Installed fonts (OS-level)
+- Installed fonts — browser-bundled fonts filtered out (Edge adds Roboto)
 - Audio sample rate (hardware-dependent)
-- Local TTS voice languages — unique language set only, not voice names/count (Chrome exposes more voices than Safari)
 - Touch point capability
+
+## What's excluded
+
+These signals differ per browser on the same device and are **not** used in `crossBrowserId`:
+
+| Signal | Why excluded |
+|---|---|
+| User-Agent, plugins, extensions | Browser-specific by definition |
+| Canvas, WebGL extensions | Engine-dependent rendering |
+| Storage quotas, permissions | Differ per browser profile |
+| `hardwareConcurrency` | Safari caps to 8 on high-core CPUs |
+| `deviceMemory` | Safari doesn't expose this API |
+| `colorDepth` / `pixelDepth` | Chrome 30 vs Safari 24 on same display |
+| Locale format | Chrome `pl` vs Edge/Firefox `pl-PL` (normalized) |
+| GPU model number | Firefox anti-fingerprinting reports different model than Chrome/Edge |
+| Speech voices | Completely different voice lists per engine (Chrome 21, Edge 25, Firefox 4 on same Windows PC) |
+| Browser-bundled fonts | Edge adds Roboto, Chrome may add Noto |
 
 ## Usage
 
@@ -21,7 +37,7 @@ The `crossBrowserId` uses only **hardware-level signals** that don't change betw
 import neoprint from '@neoprintjs/core'
 
 const fp = await neoprint.get()
-console.log(fp.crossBrowserId) // Same on Chrome, Firefox, Safari
+console.log(fp.crossBrowserId) // Same on Chrome, Firefox, Safari, Edge
 
 // Send to your server to link browser profiles
 await fetch('/api/link-device', {
@@ -35,18 +51,8 @@ await fetch('/api/link-device', {
 Cross-browser ID is **medium** collision resistance — it's possible for two different devices with identical hardware to produce the same ID. Best used as one factor in a multi-signal identification system.
 
 Signals that **help differentiation**:
-- Different GPU models → different renderer strings
-- Different font sets installed
-- Different TTS voice language sets
+- Different GPU families (Intel vs NVIDIA vs AMD vs Apple)
+- Different font sets installed at OS level
 - Different CPU architectures (Math precision)
-
-Signals **excluded** (differ per browser on the same device):
-- User-Agent, plugins, extensions
-- Canvas rendering (engine-dependent)
-- WebGL extensions (browser-dependent)
-- Storage quotas, permissions
-- `hardwareConcurrency` (Safari caps to 8 on high-core CPUs)
-- `deviceMemory` (Safari doesn't expose this API)
-- `colorDepth` / `pixelDepth` (Chrome reports 30-bit, Safari reports 24-bit)
-- Locale format (`pl` vs `pl-PL`)
-- TTS voice names/count (Chrome exposes more than Safari)
+- Different screen resolutions and DPR
+- Different timezones and locales

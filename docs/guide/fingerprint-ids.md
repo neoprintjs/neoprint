@@ -48,13 +48,12 @@ This means that even if 100 corporate laptops have identical screen resolution, 
 ## `crossBrowserId` — Cross-Browser
 
 Uses only hardware-level signals that are browser-independent, with normalization to absorb browser differences:
-- GPU vendor/renderer — ANGLE strings stripped to real chip name
-- Math precision — rounded to 8 significant digits (V8/JSC tolerance)
+- GPU vendor/renderer — ANGLE strings stripped, model numbers removed, normalized to family name
+- Math precision — rounded to 8 significant digits (V8/SpiderMonkey/JSC tolerance)
 - Screen resolution and DPR — colorDepth excluded (differs per browser)
 - Timezone and locale — normalized to base language tag
-- Installed fonts (OS-level)
+- Installed fonts — browser-bundled fonts filtered out
 - Audio sample rate
-- Local TTS voice languages (deduplicated set)
 
 **Best for:** Identifying the same user across different browsers on the same device.
 
