@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.1](https://github.com/neoprintjs/neoprint/compare/v0.3.0...v0.3.1) (2026-04-13)
+
+### Features
+
+* add Download JSON button in demo Raw tab ([3792757](https://github.com/neoprintjs/neoprint/commit/3792757a117384cb5acdb9bd3c0e36b8ed3226a1))
+
+### Bug Fixes
+
+* cross-browser ID normalization for Chrome/Edge/Firefox on Windows ([0e1c2df](https://github.com/neoprintjs/neoprint/commit/0e1c2dffeaff15885f7f6e429d2287f0b655605f))
+* stabilize fingerprint IDs across scroll positions ([ce79008](https://github.com/neoprintjs/neoprint/commit/ce79008c278e8ead7bf80a6b5c483dabe46c239a))
+
+### Documentation
+
+* update cross-browser ID docs after speech removal and GPU normalization ([d832a7b](https://github.com/neoprintjs/neoprint/commit/d832a7b4ac140cd04037a3499755be1062821634))
+
 ## [0.3.0](https://github.com/neoprintjs/neoprint/compare/v0.2.0...v0.3.0) (2026-04-12)
 
 ### Features
