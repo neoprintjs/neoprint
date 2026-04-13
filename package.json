@@ -18,6 +18,10 @@
       }
     }
   },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -46,10 +50,19 @@
     "device-fingerprint",
     "bot-detection",
     "fraud-detection",
-    "neoprint"
+    "anti-detect",
+    "cross-browser",
+    "device-attestation",
+    "behavioral-biometrics",
+    "neoprint",
+    "typescript"
   ],
   "author": "kstawinski",
   "license": "MIT",
+  "homepage": "https://neoprint.dev",
+  "bugs": {
+    "url": "https://github.com/neoprintjs/neoprint/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/neoprintjs/neoprint.git"
