@@ -9,8 +9,6 @@ export const screenCollector: Collector = {
     const data = {
       width: s.width,
       height: s.height,
-      availWidth: s.availWidth,
-      availHeight: s.availHeight,
       colorDepth: s.colorDepth,
       pixelDepth: s.pixelDepth,
       devicePixelRatio: window.devicePixelRatio,

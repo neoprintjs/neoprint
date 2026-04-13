@@ -49,7 +49,7 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 |---|---|---|
 | Signal count | ~10-15 | **20 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
-| Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari** |
+| Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari, Edge** |
 | Anti-detect browser detection | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
 | Fingerprint lifecycle | No | **Drift prediction, auto-linking, decay rate** |
 | Device attestation | No | **Single trust score + integrity token** |
@@ -99,7 +99,7 @@ const fp = await neoprint.get()
 console.log(fp.id)             // "a3f8c91b2d4e7f0612ab34cd56789012"
 console.log(fp.stableId)       // "b7e2f41a..." (survives browser updates)
 console.log(fp.weightedId)     // "c9d3a82b..." (reduces collisions)
-console.log(fp.crossBrowserId) // "d1e4f56a..." (same across Chrome/Firefox/Safari)
+console.log(fp.crossBrowserId) // "d1e4f56a..." (same across Chrome/Firefox/Safari/Edge)
 console.log(fp.confidence)     // 0.87
 console.log(fp.entropy)        // 94.5 bits
 console.log(fp.spoofingScore)  // 0.0 (clean) ... 1.0 (likely spoofed)
@@ -303,7 +303,7 @@ const fp = await neoprint.get()
 fp.id              // Full hash — all collectors, maximum uniqueness
 fp.stableId        // Stable hash — only update-resistant signals (math, webgl, fonts, intl, gpu, speech, css)
 fp.weightedId      // Weighted hash — entropy-based weighting, fewer collisions in corporate environments
-fp.crossBrowserId  // Hardware hash — same ID across Chrome, Firefox, Safari on the same device
+fp.crossBrowserId  // Hardware hash — same ID across Chrome, Firefox, Safari, Edge on the same device
 ```
 
 | ID | Use case | Survives browser update | Cross-browser | Collision resistance |
@@ -313,7 +313,7 @@ fp.crossBrowserId  // Hardware hash — same ID across Chrome, Firefox, Safari o
 | `weightedId` | Corporate/school environments | No | No | **Very high** |
 | `crossBrowserId` | Cross-browser identification | **Yes** | **Yes** | Medium |
 
-**Why four?** A single hash changes whenever any signal changes (browser update = new ID = lost user). The `stableId` ignores volatile signals. The `weightedId` prioritizes high-entropy collectors so identical corporate laptops still produce different IDs. The `crossBrowserId` uses only hardware-level signals (GPU family, CPU math precision, screen resolution, OS fonts, timezone, audio sample rate) with normalization — GPU model numbers are stripped, math is rounded to 8 digits, browser-bundled fonts are filtered, speech voices are excluded. Produces the same ID across Chrome, Firefox, Safari, and Edge.
+**Why four?** A single hash changes whenever any signal changes (browser update = new ID = lost user). The `stableId` ignores volatile signals. The `weightedId` prioritizes high-entropy collectors so identical corporate laptops still produce different IDs. The `crossBrowserId` uses only hardware-level signals (GPU family + hardware params, WebGPU limits, CPU math precision, screen resolution, OS fonts, timezone, audio sample rate) with normalization — GPU model numbers stripped, math rounded to 8 digits, browser-bundled fonts filtered, speech/hardwarePerf excluded. Produces the same ID across Chrome, Firefox, Safari, Edge, and Edge.
 
 ---
 

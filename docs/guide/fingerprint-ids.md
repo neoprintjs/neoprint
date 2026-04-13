@@ -10,7 +10,7 @@ const fp = await neoprint.get()
 fp.id              // Full hash — maximum uniqueness
 fp.stableId        // Survives browser updates
 fp.weightedId      // Fewer collisions in corporate environments
-fp.crossBrowserId  // Same across Chrome, Firefox, Safari
+fp.crossBrowserId  // Same across Chrome, Firefox, Safari, Edge
 ```
 
 | ID | Use case | Survives update | Cross-browser | Collision resistance |
@@ -49,6 +49,8 @@ This means that even if 100 corporate laptops have identical screen resolution, 
 
 Uses only hardware-level signals that are browser-independent, with normalization to absorb browser differences:
 - GPU vendor/renderer — ANGLE strings stripped, model numbers removed, normalized to family name
+- WebGL hardware params — GPU limits (maxRenderbuffer, maxUniformVectors, etc.)
+- WebGPU limits — texture dimensions, buffer sizes (when available)
 - Math precision — rounded to 8 significant digits (V8/SpiderMonkey/JSC tolerance)
 - Screen resolution and DPR — colorDepth excluded (differs per browser)
 - Timezone and locale — normalized to base language tag

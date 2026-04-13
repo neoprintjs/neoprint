@@ -23,7 +23,7 @@ const fp = await neoprint.get()
 
 console.log(fp.id)              // full fingerprint hash
 console.log(fp.stableId)        // survives browser updates
-console.log(fp.crossBrowserId)  // same across Chrome/Firefox/Safari
+console.log(fp.crossBrowserId)  // same across Chrome/Firefox/Safari/Edge
 console.log(fp.confidence)      // 0–1
 console.log(fp.entropy)         // bits of entropy
 ```

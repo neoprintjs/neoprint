@@ -21,7 +21,7 @@ hero:
 features:
   - icon: "\U0001F9EC"
     title: 4 ID Strategies
-    details: Full hash, stable (survives browser updates), weighted (fewer collisions), and cross-browser (same ID on Chrome/Firefox/Safari).
+    details: Full hash, stable (survives browser updates), weighted (fewer collisions), and cross-browser (same ID on Chrome/Firefox/Safari/Edge).
   - icon: "\U0001F575"
     title: Anti-Detect Detection
     details: Detect Multilogin, GoLogin, Dolphin Anty, Linken Sphere, Incogniton, VMLogin, and AdsPower via prototype tampering and behavioral analysis.

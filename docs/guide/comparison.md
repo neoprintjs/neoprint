@@ -6,7 +6,7 @@
 |---|---|---|
 | Signal count | ~10-15 | **20 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
-| Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari** |
+| Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari, Edge** |
 | Anti-detect browser detection | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
 | Fingerprint lifecycle | No | **Drift prediction, auto-linking, decay rate** |
 | Confidence scoring | No | **Per-collector stability + overall score** |

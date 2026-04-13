@@ -7,8 +7,13 @@ import { murmurhash3 } from '../core/hash.js'
  * low-entropy signals (screen, navigator) are identical across devices.
  */
 export function computeWeightedId(components: FingerprintComponents): string {
+  // Exclude collectors with values that change between runs on the same page
+  const VOLATILE_COLLECTORS = new Set([
+    'hardwarePerf', // CPU benchmark timings vary with load
+  ])
+
   const entries = Object.entries(components)
-    .filter(([, comp]) => comp.value !== null && comp.entropy > 0)
+    .filter(([name, comp]) => comp.value !== null && comp.entropy > 0 && !VOLATILE_COLLECTORS.has(name))
     .sort(([, a], [, b]) => b.entropy - a.entropy)
 
   if (entries.length === 0) return '0'.repeat(32)

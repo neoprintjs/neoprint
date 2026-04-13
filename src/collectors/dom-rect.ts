@@ -31,11 +31,10 @@ export const domRectCollector: Collector = {
       container.appendChild(el)
     }
 
+    // Only use width/height — x/y change with scroll position
     const rects = elements.map((el) => {
       const r = el.getBoundingClientRect()
       return {
-        x: r.x,
-        y: r.y,
         width: r.width,
         height: r.height,
       }

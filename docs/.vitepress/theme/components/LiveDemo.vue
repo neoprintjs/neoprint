@@ -47,7 +47,7 @@ function barColor(v: number, invert = false) {
   return v >= 0.7 ? 'var(--vp-c-brand-1)' : v >= 0.4 ? '#d97706' : '#dc2626'
 }
 function benchColor(ms: number) { return ms > 200 ? '#dc2626' : ms > 50 ? '#d97706' : 'var(--vp-c-brand-1)' }
-onMounted(() => { run() })
+onMounted(() => { if (!fp.value && !loading.value) run() })
 
 function downloadRaw() {
   if (!fp.value) return
@@ -95,7 +95,7 @@ function preview(v: unknown): string {
             { label: 'Full ID', val: fp.id, desc: 'All collectors combined. Maximum uniqueness, changes on any signal shift.' },
             { label: 'Stable', val: fp.stableId, desc: 'Uses only update-resistant signals. Survives browser updates.' },
             { label: 'Weighted', val: fp.weightedId, desc: 'Entropy-weighted hash. Fewer collisions on similar hardware.' },
-            { label: 'Cross-browser', val: fp.crossBrowserId, desc: 'Hardware-only signals. Same ID across Chrome, Firefox, Safari.' },
+            { label: 'Cross-browser', val: fp.crossBrowserId, desc: 'Hardware-only signals. Same ID across Chrome, Firefox, Safari, Edge.' },
           ]" :key="item.label" class="np-id-card">
             <div class="np-id-card-header">
               <span class="np-id-card-label">{{ item.label }}</span>

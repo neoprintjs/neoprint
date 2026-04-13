@@ -25,9 +25,23 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
       renderer: normalizeGpuRenderer(webgl.renderer),
       maxTextureSize: webgl.maxTextureSize,
     }
+
+    // WebGL hardware params — these are GPU limits, identical cross-browser
+    const params = webgl.params
+    if (params) {
+      signals.gpuParams = {
+        maxCubeMapTextureSize: params.maxCubeMapTextureSize,
+        maxRenderbufferSize: params.maxRenderbufferSize,
+        maxFragmentUniformVectors: params.maxFragmentUniformVectors,
+        maxVertexUniformVectors: params.maxVertexUniformVectors,
+        maxVertexAttribs: params.maxVertexAttribs,
+        maxVaryingVectors: params.maxVaryingVectors,
+        maxTextureImageUnits: params.maxTextureImageUnits,
+      }
+    }
   }
 
-  // WebGPU adapter — hardware-level (already normalized by browser)
+  // WebGPU adapter + limits — hardware-level
   const gpu = components.gpu?.value as any
   if (gpu?.supported) {
     signals.gpuAdapter = {
@@ -35,22 +49,25 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
       architecture: gpu.architecture,
       device: gpu.device,
     }
+    if (gpu.limits) {
+      signals.gpuLimits = gpu.limits
+    }
   }
 
   // Math precision — round to 8 significant digits to absorb engine diffs
   const math = components.math?.value as any
   if (math) {
     signals.math = {
-      acos: roundSig(math.acos, 8),
-      asin: roundSig(math.asin, 8),
-      atan: roundSig(math.atan, 8),
-      cos: roundSig(math.cos, 8),
-      exp: roundSig(math.exp, 8),
-      log: roundSig(math.log, 8),
-      sin: roundSig(math.sin, 8),
-      sqrt: roundSig(math.sqrt, 8),
-      tan: roundSig(math.tan, 8),
-      pow: roundSig(math.pow, 8),
+      acos: stablePrecision(math.acos),
+      asin: stablePrecision(math.asin),
+      atan: stablePrecision(math.atan),
+      cos: stablePrecision(math.cos),
+      exp: stablePrecision(math.exp),
+      log: stablePrecision(math.log),
+      sin: stablePrecision(math.sin),
+      sqrt: stablePrecision(math.sqrt),
+      tan: stablePrecision(math.tan),
+      pow: stablePrecision(math.pow),
     }
   }
 
@@ -109,6 +126,10 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
+  // Hardware perf ratios are EXCLUDED from cross-browser ID:
+  // Benchmark timings vary too much between page loads (thermal throttling,
+  // background processes, GC timing) to produce stable ratios even when rounded.
+
   // Speech is EXCLUDED from cross-browser ID:
   // - Chrome/Edge/Firefox expose completely different voice lists on Windows
   // - Firefox adds desktop voices (Zira) that Chrome/Edge hide
@@ -116,7 +137,7 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
   // The signal is too unstable across browser engines to be useful here.
 
   // Hash
-  const json = JSON.stringify(signals, Object.keys(signals).sort())
+  const json = JSON.stringify(signals)
   const h1 = murmurhash3(json, 0)
   const h2 = murmurhash3(json, h1)
   const h3 = murmurhash3(json, h2)
@@ -167,7 +188,7 @@ function normalizeGpuVendor(vendor: string | null): string {
  *
  *   Chrome:  "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)"
  *   Safari:  "Apple GPU"
- *   All → "Apple M4" / "Apple GPU"
+ *   All → "Apple" (Safari never exposes specific chip)
  */
 function normalizeGpuRenderer(renderer: string | null): string {
   if (!renderer) return ''
@@ -211,6 +232,12 @@ function normalizeGpuRenderer(renderer: string | null): string {
   chip = chip.replace(/^(NVIDIA\s+GeForce\s+\w+)\s+\d+.*$/i, '$1')
   chip = chip.replace(/^(AMD\s+Radeon\s+\w+)\s+\d+.*$/i, '$1')
 
+  // Normalize Apple GPU: Safari returns "Apple GPU", Chrome returns "Apple M4" etc.
+  // Both reduce to "Apple" since Safari never exposes the specific chip.
+  if (/^Apple\b/i.test(chip)) {
+    chip = 'Apple'
+  }
+
   // Clean up extra spaces
   chip = chip.replace(/\s+/g, ' ').trim()
 
@@ -227,13 +254,11 @@ function normalizeLocale(locale: string | null | undefined): string {
 }
 
 /**
- * Round a number to N significant digits.
- * This absorbs JS engine floating-point precision differences.
+ * Convert a number to a stable string representation with 8 significant digits.
+ * Returns a string (not number) so JSON.stringify doesn't re-format it
+ * differently across JS engines (V8 vs JSC format e-notation differently).
  */
-function roundSig(value: number, digits: number): number {
-  if (value === 0 || !isFinite(value)) return value
-  const d = Math.ceil(Math.log10(Math.abs(value)))
-  const power = digits - d
-  const magnitude = Math.pow(10, power)
-  return Math.round(value * magnitude) / magnitude
+function stablePrecision(value: number): string {
+  if (!isFinite(value)) return String(value)
+  return value.toPrecision(8)
 }

@@ -6,7 +6,7 @@ DOMRect fingerprinting measures `getBoundingClientRect()` precision on hidden el
 
 Neoprint creates 3 hidden elements with specific CSS properties (font sizes with decimal values, fractional padding, small rotation transforms) and reads their bounding rectangles.
 
-The sub-pixel values of `x`, `y`, `width`, and `height` differ based on:
+Only `width` and `height` are recorded (`x`/`y` are excluded because they change with scroll position). The sub-pixel values differ based on:
 - Font rendering engine (Core Text vs DirectWrite vs FreeType)
 - Sub-pixel anti-aliasing settings
 - Display scaling factor
@@ -27,5 +27,5 @@ Excluded in `privacy` mode.
 ```ts
 const fp = await neoprint.get({ collectors: ['domRect'] })
 const rects = fp.components.domRect.value
-// [{ x: -9999, y: -9996.227, width: 187.617, height: 19.453 }, ...]
+// [{ width: 187.617, height: 19.453 }, ...]
 ```

@@ -7,6 +7,8 @@ Identify the same user across Chrome, Firefox, Safari, and Edge on the same devi
 The `crossBrowserId` uses only **hardware-level signals** that don't change between browsers. All values are **normalized** to absorb browser-specific differences:
 
 - GPU vendor and renderer — ANGLE wrapper stripped, PCI IDs removed, model numbers stripped to family name (e.g. `Intel(R) HD Graphics 620` and `Intel(R) HD Graphics 400` both become `Intel HD Graphics`)
+- WebGL hardware params — `maxRenderbufferSize`, `maxFragmentUniformVectors`, `maxVertexAttribs`, etc. (GPU limits, identical cross-browser)
+- WebGPU limits — `maxTextureDimension`, `maxBufferSize`, etc. (when available)
 - CPU math precision — rounded to 8 significant digits (absorbs V8 vs SpiderMonkey vs JSC diffs)
 - Screen resolution and DPR — `colorDepth`/`pixelDepth` excluded (Chrome reports 30, Safari reports 24)
 - Timezone and locale — locale normalized to base language (`pl-PL` → `pl`)
@@ -30,6 +32,7 @@ These signals differ per browser on the same device and are **not** used in `cro
 | GPU model number | Firefox anti-fingerprinting reports different model than Chrome/Edge |
 | Speech voices | Completely different voice lists per engine (Chrome 21, Edge 25, Firefox 4 on same Windows PC) |
 | Browser-bundled fonts | Edge adds Roboto, Chrome may add Noto |
+| Hardware perf timings | Vary with CPU load, thermal state, GC timing |
 
 ## Usage
 
@@ -51,8 +54,9 @@ await fetch('/api/link-device', {
 Cross-browser ID is **medium** collision resistance — it's possible for two different devices with identical hardware to produce the same ID. Best used as one factor in a multi-signal identification system.
 
 Signals that **help differentiation**:
-- Different GPU families (Intel vs NVIDIA vs AMD vs Apple)
+- Different GPU families → different renderer and hardware limits
 - Different font sets installed at OS level
-- Different CPU architectures (Math precision)
+- Different CPU architectures → different math precision and perf ratios
 - Different screen resolutions and DPR
 - Different timezones and locales
+- WebGPU limits (when available) add significant hardware detail

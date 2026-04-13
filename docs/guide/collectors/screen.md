@@ -8,8 +8,6 @@ Screen fingerprinting collects physical display properties and user preferences.
 |---|---|---|
 | **width** | `screen.width` | `1920` |
 | **height** | `screen.height` | `1080` |
-| **availWidth** | `screen.availWidth` | `1920` |
-| **availHeight** | `screen.availHeight` | `1050` (minus taskbar) |
 | **colorDepth** | `screen.colorDepth` | `24` or `30` |
 | **pixelDepth** | `screen.pixelDepth` | `24` or `30` |
 | **devicePixelRatio** | `window.devicePixelRatio` | `2` (Retina) |

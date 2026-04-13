@@ -28,7 +28,7 @@ describe('computeCrossBrowserId', () => {
         webgl: comp({ vendor: 'Google Inc. (Apple)', renderer: 'ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)', maxTextureSize: 16384 }),
       }
       const safari: FingerprintComponents = {
-        webgl: comp({ vendor: 'Apple Inc.', renderer: 'Apple M4', maxTextureSize: 16384 }),
+        webgl: comp({ vendor: 'Apple Inc.', renderer: 'Apple GPU', maxTextureSize: 16384 }),
       }
       expect(computeCrossBrowserId(chrome)).toBe(computeCrossBrowserId(safari))
     })
@@ -125,6 +125,28 @@ describe('computeCrossBrowserId', () => {
         fonts: comp(['Arial', 'Courier New', 'Georgia', 'Roboto', 'Times New Roman']),
       }
       expect(computeCrossBrowserId(chrome)).toBe(computeCrossBrowserId(edge))
+    })
+  })
+
+  describe('WebGL params inclusion', () => {
+    it('uses GPU hardware limits in hash', () => {
+      const a: FingerprintComponents = {
+        webgl: comp({ vendor: 'Intel', renderer: 'Intel HD Graphics', maxTextureSize: 16384, params: { maxRenderbufferSize: 16384, maxFragmentUniformVectors: 1024, maxVertexAttribs: 16, maxVertexUniformVectors: 4096, maxVaryingVectors: 30, maxTextureImageUnits: 16, maxCubeMapTextureSize: 16384 } }),
+      }
+      const b: FingerprintComponents = {
+        webgl: comp({ vendor: 'Intel', renderer: 'Intel HD Graphics', maxTextureSize: 16384, params: { maxRenderbufferSize: 8192, maxFragmentUniformVectors: 512, maxVertexAttribs: 16, maxVertexUniformVectors: 4096, maxVaryingVectors: 30, maxTextureImageUnits: 16, maxCubeMapTextureSize: 8192 } }),
+      }
+      expect(computeCrossBrowserId(a)).not.toBe(computeCrossBrowserId(b))
+    })
+  })
+
+  describe('Hardware perf exclusion', () => {
+    it('ignores hardwarePerf (timings too volatile)', () => {
+      const withPerf: FingerprintComponents = {
+        hardwarePerf: comp({ floatArith: 2.1, trigonometry: 1.8 }),
+      }
+      const withoutPerf: FingerprintComponents = {}
+      expect(computeCrossBrowserId(withPerf)).toBe(computeCrossBrowserId(withoutPerf))
     })
   })
 
