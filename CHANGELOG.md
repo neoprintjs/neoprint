@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.2](https://github.com/neoprintjs/neoprint/compare/v0.3.1...v0.3.2) (2026-04-13)
+
+### Bug Fixes
+
+* exclude Playwright tests from vitest runner ([4de0ca8](https://github.com/neoprintjs/neoprint/commit/4de0ca8d8cafde5b731aea574d129e679bd9a26f))
+
 ## [0.3.1](https://github.com/neoprintjs/neoprint/compare/v0.3.0...v0.3.1) (2026-04-13)
 
 ### Features
