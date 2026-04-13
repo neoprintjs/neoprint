@@ -6,15 +6,15 @@ Identify the same user across Chrome, Firefox, Safari, and Edge on the same devi
 
 The `crossBrowserId` uses only **hardware-level signals** that don't change between browsers. All values are **normalized** to absorb browser-specific differences:
 
-- GPU vendor and renderer — ANGLE wrapper stripped, PCI IDs removed, model numbers stripped to family name (e.g. `Intel(R) HD Graphics 620` and `Intel(R) HD Graphics 400` both become `Intel HD Graphics`)
-- WebGL hardware params — `maxRenderbufferSize`, `maxFragmentUniformVectors`, `maxVertexAttribs`, etc. (GPU limits, identical cross-browser)
+- GPU vendor and renderer — ANGLE wrapper stripped, PCI IDs removed, model numbers stripped to family name
+- WebGL rendering hash — 3D scene pixel output, identical cross-browser on same GPU (~8 bits extra entropy)
+- WebGL hardware params — `maxRenderbufferSize`, `maxFragmentUniformVectors`, `maxVertexAttribs`, etc.
 - WebGPU limits — `maxTextureDimension`, `maxBufferSize`, etc. (when available)
 - CPU math precision — rounded to 8 significant digits (absorbs V8 vs SpiderMonkey vs JSC diffs)
-- Screen resolution and DPR — `colorDepth`/`pixelDepth` excluded (Chrome reports 30, Safari reports 24)
+- Display properties — DPR, HDR, color gamut, touch capability (not screen dimensions — Safari reports viewport size)
 - Timezone and locale — locale normalized to base language (`pl-PL` → `pl`)
 - Installed fonts — browser-bundled fonts filtered out (Edge adds Roboto)
 - Audio sample rate (hardware-dependent)
-- Touch point capability
 
 ## What's excluded
 
@@ -33,6 +33,7 @@ These signals differ per browser on the same device and are **not** used in `cro
 | Speech voices | Completely different voice lists per engine (Chrome 21, Edge 25, Firefox 4 on same Windows PC) |
 | Browser-bundled fonts | Edge adds Roboto, Chrome may add Noto |
 | Hardware perf timings | Vary with CPU load, thermal state, GC timing |
+| Screen width/height | Safari reports viewport size instead of physical resolution |
 
 ## Usage
 

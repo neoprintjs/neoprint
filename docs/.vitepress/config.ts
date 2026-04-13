@@ -73,6 +73,7 @@ export default defineConfig({
                 { text: 'SVG', link: '/guide/collectors/svg' },
                 { text: 'WebRTC', link: '/guide/collectors/webrtc' },
                 { text: 'Hardware Perf', link: '/guide/collectors/hardware-perf' },
+                { text: 'WebGL Render', link: '/guide/collectors/webgl-render' },
               ],
             },
             { text: 'Confidence & Entropy', link: '/guide/confidence' },

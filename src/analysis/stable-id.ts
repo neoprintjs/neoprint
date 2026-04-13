@@ -4,6 +4,11 @@ import { hashComponents } from '../core/hash.js'
 /**
  * Collectors that are highly stable across browser updates,
  * incognito mode, and minor config changes.
+ *
+ * Excluded:
+ * - speech: Safari returns 0 voices in private mode, breaking stability
+ * - screen: availWidth/availHeight change with dock/taskbar
+ * - navigator: hardwareConcurrency capped by Safari
  */
 const STABLE_COLLECTORS = new Set([
   'math',
@@ -11,7 +16,6 @@ const STABLE_COLLECTORS = new Set([
   'fonts',
   'intl',
   'gpu',
-  'speech',
   'cssFeatures',
 ])
 

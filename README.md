@@ -2,7 +2,7 @@
 
 **Advanced browser fingerprinting library** — open-source, modular, and privacy-aware.
 
-Neoprint collects 20 browser signals, computes a stable device identifier, and provides fingerprint intelligence — spoofing heuristics, bot signal analysis, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
+Neoprint collects 21 browser signals, computes a stable device identifier, and provides fingerprint intelligence — spoofing heuristics, bot signal analysis, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
 
 [![npm version](https://img.shields.io/npm/v/@neoprintjs/core.svg)](https://www.npmjs.com/package/@neoprintjs/core)
 [![CI](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml/badge.svg)](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml)
@@ -36,6 +36,7 @@ Neoprint collects 20 browser signals, computes a stable device identifier, and p
 - [Built-in collectors](#built-in-collectors)
 - [Browser support](#browser-support)
 - [How it works](#how-it-works)
+- [Limitations & security](#limitations--security-considerations)
 - [Versioning](#versioning)
 - [Contributing](#contributing)
 - [License](#license)
@@ -48,7 +49,7 @@ Most open-source fingerprinting solutions offer a basic hash of ~10 browser prop
 
 | Feature | Typical open-source | **neoprint** |
 |---|---|---|
-| Signal count | ~10-15 | **20 built-in** |
+| Signal count | ~10-15 | **21 built-in** |
 | Multiple ID strategies | No (single hash) | **4 IDs: full, stable, weighted, cross-browser** |
 | Cross-browser identification | No | **Same ID across Chrome, Firefox, Safari, Edge** |
 | Anti-detect heuristics | No | **Multilogin, GoLogin, Dolphin Anty, ...** |
@@ -701,8 +702,9 @@ const similarity = neoprint.compare(restored, newFp)
 | `svg` | SVG rendering + text BBox differences | ~7 bits | 0.80 |
 | `webrtc` | ICE candidate types (no raw IPs exposed) | ~4 bits | 0.50 |
 | `hardwarePerf` | CPU micro-benchmarks (float, trig, sort, matrix) | ~4 bits | 0.50 |
+| `webglRender` | WebGL 3D scene pixel hash (GPU rendering output) | ~8 bits | 0.85 |
 
-**Total: ~135 bits of theoretical entropy.** Real-world uniqueness is lower due to signal correlation and non-uniform distribution across populations. Effective uniqueness depends on your user base size and diversity.
+**Total: ~143 bits of theoretical entropy.** Real-world uniqueness is lower due to signal correlation and non-uniform distribution across populations. Effective uniqueness depends on your user base size and diversity.
 
 ---
 
@@ -728,6 +730,39 @@ Neoprint gracefully degrades — if a collector fails or is blocked, it returns 
 2. **Hashing** — All values are combined and hashed with MurmurHash3 (4 rounds → 128-bit hex ID)
 3. **Analysis** — Confidence, entropy, and spoofing scores are computed by cross-referencing signals
 4. **Result** — A single `Fingerprint` object with the ID, scores, and raw component data
+
+---
+
+## Limitations & security considerations
+
+Neoprint is a **client-side heuristic system**, not a security product. Understanding its limitations is important for correct usage.
+
+### Entropy vs real-world uniqueness
+
+The 21 collectors produce ~135 bits of theoretical entropy, but **effective uniqueness is ~30-40 bits** due to:
+- **Signal correlation** — GPU params correlate with GPU vendor, screen resolution correlates with DPR
+- **Non-uniform distribution** — 80%+ of users share common screen resolutions and system fonts
+- **Population matters** — among 100 corporate laptops with identical hardware, effective entropy drops to ~8-10 bits
+
+### Collision risk
+
+| Scenario | Risk | Why |
+|---|---|---|
+| Random internet population | Very low | GPU + fonts + screen + math + timezone provide good spread |
+| Corporate fleet (identical hardware) | **Moderate to high** | Same GPU, screen, fonts, timezone — only user-installed fonts and math precision differ |
+| Same device, different browsers | Zero (by design) | crossBrowserId normalizes browser differences |
+
+### What neoprint is NOT
+
+- **Not a security system** — all signals can be spoofed by a determined attacker
+- **Not a replacement for authentication** — use as one signal among many, not as sole identifier
+- **Not server-side validated** — `attestDevice()` and `detectBot()` are client-side heuristics, not guarantees. Combine with server-side validation for production security
+- **Not cryptographically signed** — `integrityToken` uses MurmurHash3 (non-cryptographic), raising the bar for casual tampering but not resistant to targeted attacks
+
+### Recommended usage
+
+- **Good for**: visitor analytics, fraud signal enrichment, session continuity, A/B test bucketing, device recognition as one factor in multi-factor systems
+- **Not suitable for**: sole authentication factor, legal identity verification, high-security access control without server-side validation
 
 ---
 

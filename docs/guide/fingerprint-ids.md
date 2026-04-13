@@ -28,7 +28,9 @@ Uses all available collectors. Maximum uniqueness but changes when any signal ch
 
 ## `stableId` — Update-Resistant
 
-Uses only the most stable collectors: `math`, `webgl` (vendor/renderer/params only), `fonts`, `intl`, `gpu`, `speech`, `cssFeatures`.
+Uses only the most stable collectors: `math`, `webgl` (vendor/renderer/params only), `fonts`, `intl`, `gpu`, `cssFeatures`.
+
+`speech` is excluded because Safari returns 0 voices in private browsing, breaking stability.
 
 These signals don't change during browser updates. They only change when:
 - Hardware changes (new GPU)

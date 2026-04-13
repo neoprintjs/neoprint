@@ -41,6 +41,16 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
+  // WebGL rendering hash — actual GPU pixel output, independent of browser engine.
+  // Same GPU produces same pixels regardless of Chrome/Safari/Firefox.
+  const webglRender = components.webglRender?.value as any
+  if (webglRender?.hash) {
+    signals.gpuRender = {
+      hash: webglRender.hash,
+      checksum: webglRender.checksum,
+    }
+  }
+
   // WebGPU adapter + limits — hardware-level
   const gpu = components.gpu?.value as any
   if (gpu?.supported) {
@@ -71,12 +81,13 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
     }
   }
 
-  // Screen — exclude colorDepth/pixelDepth (Chrome 30 vs Safari 24)
+  // Screen — only hardware-level display properties.
+  // width/height excluded: Safari reports available space (changes with
+  // window resize, Stage Manager, tiling) instead of physical resolution.
+  // colorDepth/pixelDepth excluded: Chrome 30 vs Safari 24.
   const screen = components.screen?.value as any
   if (screen) {
     signals.screen = {
-      width: screen.width,
-      height: screen.height,
       devicePixelRatio: screen.devicePixelRatio,
       hdr: screen.hdr,
       colorGamut: screen.colorGamut,
@@ -136,7 +147,10 @@ export function computeCrossBrowserId(components: FingerprintComponents): string
   // - Voice count varies wildly (Chrome 21, Edge 25, Firefox 4)
   // The signal is too unstable across browser engines to be useful here.
 
-  // Hash
+  // Hash — keys are in deterministic order because they're added
+  // sequentially in the code above (gpu, gpuAdapter, gpuParams, math,
+  // screen, timezone, intl, fonts, hardware, audio).
+  // Do NOT sort — it would change all existing hashes.
   const json = JSON.stringify(signals)
   const h1 = murmurhash3(json, 0)
   const h2 = murmurhash3(json, h1)
