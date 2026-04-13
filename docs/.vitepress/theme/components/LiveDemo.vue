@@ -49,6 +49,18 @@ function barColor(v: number, invert = false) {
 function benchColor(ms: number) { return ms > 200 ? '#dc2626' : ms > 50 ? '#d97706' : 'var(--vp-c-brand-1)' }
 onMounted(() => { run() })
 
+function downloadRaw() {
+  if (!fp.value) return
+  const json = JSON.stringify(fp.value, null, 2)
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `neoprint-${fp.value.id.slice(0, 8)}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 function preview(v: unknown): string {
   if (v === null) return 'null'
   if (typeof v === 'string') return v.length > 60 ? v.slice(0, 60) + '...' : v
@@ -227,6 +239,9 @@ function preview(v: unknown): string {
       <template v-if="tab === 'raw'">
         <div class="np-heading">Raw fingerprint JSON</div>
         <div class="np-desc">Full fingerprint object as returned by neoprint.get().</div>
+        <div style="margin-bottom: 12px">
+          <button class="np-run-btn" @click="downloadRaw">Download JSON</button>
+        </div>
         <pre class="np-raw">{{ JSON.stringify(fp, null, 2) }}</pre>
       </template>
     </template>
