@@ -53,13 +53,13 @@ describe('detectAntiDetect', () => {
     expect(result.signals).toContain('platform_gpu_mismatch')
   })
 
-  it('detects too perfect profile', () => {
+  it('does not flag normal browsers as too perfect', () => {
     const components: FingerprintComponents = {}
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 20; i++) {
       components[`collector${i}`] = comp(`value${i}`)
     }
     const result = detectAntiDetect(components)
-    expect(result.signals).toContain('too_perfect_profile')
+    expect(result.signals).not.toContain('too_perfect_profile')
   })
 
   it('confidence is between 0 and 1', () => {

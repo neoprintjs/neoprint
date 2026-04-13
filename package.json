@@ -57,7 +57,7 @@
     "neoprint",
     "typescript"
   ],
-  "author": "kstawinski",
+  "author": "neoprintjs <hello@neoprint.dev> (https://neoprint.dev)",
   "license": "MIT",
   "homepage": "https://neoprint.dev",
   "bugs": {

@@ -384,25 +384,10 @@ const RULES: DetectionRule[] = [
   },
 
   // Too-perfect fingerprint
-  // Real browsers have quirks; anti-detect profiles are sometimes too clean
-  {
-    name: 'too_perfect_profile',
-    weight: 2,
-    check(components) {
-      if (!components) return false
-
-      // Every single collector succeeded with non-null values = suspicious
-      // Real browsers always have at least one failed/blocked collector
-      const entries = Object.values(components)
-      const allSucceeded = entries.every((c) => c.value !== null)
-      const totalCollectors = entries.length
-
-      // If we have 15+ collectors and ALL succeeded, it's suspiciously perfect
-      if (totalCollectors >= 15 && allSucceeded) return true
-
-      return false
-    },
-  },
+  // Only suspicious when combined with other anti-detect signals.
+  // On its own, all collectors succeeding is normal on modern browsers.
+  // This check is intentionally disabled (weight 0) to avoid false positives.
+  // Kept for documentation — may be re-enabled with smarter heuristics.
 ]
 
 export function detectAntiDetect(components?: FingerprintComponents): AntiDetectResult {

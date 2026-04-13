@@ -5,6 +5,7 @@
 Neoprint collects 20 browser signals, computes a stable device identifier, and provides spoofing detection, bot detection, behavioral biometrics, and environment profiling — all in a single zero-dependency package.
 
 [![npm version](https://img.shields.io/npm/v/@neoprintjs/core.svg)](https://www.npmjs.com/package/@neoprintjs/core)
+[![CI](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml/badge.svg)](https://github.com/neoprintjs/neoprint/actions/workflows/ci.yml)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/@neoprintjs/core)](https://bundlephobia.com/package/@neoprintjs/core)
 [![license](https://img.shields.io/npm/l/@neoprintjs/core.svg)](https://github.com/neoprintjs/neoprint/blob/main/LICENSE)
 
