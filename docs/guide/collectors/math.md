@@ -53,7 +53,7 @@ Math is the most stable collector alongside WebGL. Values only change when the u
 
 ## Cross-browser normalization
 
-For `crossBrowserId`, math values are rounded to 8 significant digits to absorb V8 vs JavaScriptCore last-digit differences while preserving architecture-level differences (x86 vs ARM).
+For [`crossBrowserId`](/guide/fingerprint-ids), math values are rounded to 8 significant digits to absorb V8 vs JavaScriptCore last-digit differences while preserving architecture-level differences (x86 vs ARM).
 
 ## Web Worker offloading
 

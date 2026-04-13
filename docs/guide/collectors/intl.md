@@ -20,7 +20,7 @@ Intl fingerprinting reads internationalization settings from the `Intl` API. The
 
 ## Cross-browser normalization
 
-Locale format differs between browsers: Chrome reports `pl`, Safari reports `pl-PL`. For `crossBrowserId`, the locale is normalized to the base language tag (`pl`).
+Locale format differs between browsers: Chrome reports `pl`, Safari reports `pl-PL`. For [`crossBrowserId`](/guide/fingerprint-ids), the locale is normalized to the base language tag (`pl`).
 
 ## Entropy and stability
 

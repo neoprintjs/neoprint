@@ -1,6 +1,6 @@
 # Client-Side Risk Scoring
 
-Single API call for client-side risk assessment. Instead of manually combining bot heuristics, spoofing analysis, anti-detect checks, and hardware validation, `attestDevice` does it all with a weighted scoring system. This is a heuristic — for production security, combine with server-side validation.
+Single API call for client-side risk assessment. Instead of manually combining [`neoprint.detectBot()`](/api/detect-bot), [`neoprint.detectSpoofing()`](/api/detect-spoofing), [`neoprint.detectAntiDetect()`](/api/detect-anti-detect), and hardware validation, [`neoprint.attestDevice()`](/api/attest) does it all with a weighted scoring system. This is a heuristic — for production security, combine with [`neoprint.serverHints()`](/api/server-hints).
 
 ## Usage
 

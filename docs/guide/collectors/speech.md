@@ -40,11 +40,11 @@ The high duration is due to async voice loading. Neoprint waits up to 300ms for 
 
 ## Cross-browser considerations
 
-Chrome exposes more voices as `localService: true` than Safari on the same OS (180 vs 68 in testing). For `crossBrowserId`, neoprint uses only the **unique set of voice languages**, not voice names or count, because the supported language set is identical across browsers.
+Chrome exposes more voices as `localService: true` than Safari on the same OS (180 vs 68 in testing). Speech is **excluded** from [`crossBrowserId`](/guide/fingerprint-ids) and [`stableId`](/guide/fingerprint-ids) because voice lists differ too much between browser engines on the same OS, and Safari returns 0 voices in private browsing.
 
 ## Role in incognito detection
 
-Safari private browsing returns 0 voices from `speechSynthesis.getVoices()`, while normal mode returns 68. This is one of the strongest incognito detection signals for Safari.
+Safari private browsing returns 0 voices from `speechSynthesis.getVoices()`, while normal mode returns 68. This is one of the strongest signals used by [`neoprint.detectIncognito()`](/api/detect-incognito) for Safari.
 
 ## Usage
 

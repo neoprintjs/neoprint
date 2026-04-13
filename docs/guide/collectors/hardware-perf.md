@@ -74,7 +74,7 @@ Stability is lower than other collectors because timing varies with system load.
 
 ## Role in risk scoring
 
-The `attestDevice` function checks that hardware perf timings are realistic:
+The [`neoprint.attestDevice()`](/api/attest) function checks that hardware perf timings are realistic:
 - All benchmarks should complete in > 0ms (instant = emulated environment)
 - All benchmarks should complete in < 500ms (artificially slow = suspicious)
 

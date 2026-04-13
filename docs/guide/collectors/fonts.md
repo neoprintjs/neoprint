@@ -53,7 +53,7 @@ Fonts are highly stable (only change when user installs/removes fonts) and high-
 
 ## Role in cross-browser ID
 
-Fonts are installed at the OS level, not the browser level, making them a key signal for `crossBrowserId`. The same font set is visible from Chrome, Firefox, and Safari on the same machine.
+Fonts are installed at the OS level, not the browser level, making them a key signal for [`crossBrowserId`](/guide/fingerprint-ids). The same font set is visible from Chrome, Firefox, and Safari on the same machine.
 
 ## Usage
 

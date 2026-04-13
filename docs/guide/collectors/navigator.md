@@ -29,7 +29,7 @@ The navigator collector reads browser and device metadata exposed through the `n
 
 ## Cross-browser considerations
 
-`hardwareConcurrency` and `deviceMemory` are excluded from `crossBrowserId`:
+`hardwareConcurrency` and `deviceMemory` are excluded from [`crossBrowserId`](/guide/fingerprint-ids):
 - Safari caps `hardwareConcurrency` at 8 even on 10+ core machines
 - Safari doesn't expose `deviceMemory` at all
 

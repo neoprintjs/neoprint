@@ -53,7 +53,7 @@ WebGL is the most stable collector. The renderer, vendor, and hardware limits do
 
 ## Role in cross-browser ID
 
-WebGL data is used in the `crossBrowserId` calculation, but with normalization:
+WebGL data is used in the [`crossBrowserId`](/guide/fingerprint-ids) calculation, but with normalization:
 
 - **ANGLE wrapper strings** are stripped to extract the real chip name
 - Only `vendor`, `renderer`, and `maxTextureSize` are used (not extensions, which vary per browser)

@@ -31,7 +31,11 @@ Screen properties change when the user connects an external monitor, changes res
 
 ## Cross-browser considerations
 
-`colorDepth` and `pixelDepth` are excluded from `crossBrowserId` because Chrome reports `30` while Safari reports `24` on the same display. Resolution, DPR, HDR, and color gamut are consistent across browsers.
+Several screen signals are excluded from [`crossBrowserId`](/guide/fingerprint-ids):
+- `colorDepth`/`pixelDepth` — Chrome reports `30`, Safari reports `24` on the same display
+- `width`/`height` — Safari reports viewport size instead of physical resolution (changes with window resize and Stage Manager)
+
+Only `devicePixelRatio`, `hdr`, `colorGamut`, and `touchPoints` are used in cross-browser hash.
 
 ## Usage
 

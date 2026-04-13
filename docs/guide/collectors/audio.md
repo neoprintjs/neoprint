@@ -61,7 +61,7 @@ Audio fingerprinting was optimized from 44100 samples (1 second, ~120ms) down to
 | **Tor Browser** | Blocks `OfflineAudioContext` entirely |
 | **Firefox** (resistFingerprinting) | Returns uniform audio data |
 
-Neoprint's `detectNoise()` function checks audio output for variance across multiple renders to detect noise injection.
+Neoprint's [`neoprint.detectNoise()`](/api/detect-noise) checks audio output for variance across multiple renders to detect noise injection.
 
 ## Usage
 

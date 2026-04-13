@@ -38,7 +38,7 @@ This is a key advantage over canvas 2D fingerprinting, which varies per browser 
 
 ## Role in cross-browser ID
 
-`webglRender` is included in `crossBrowserId` because the pixel output depends on GPU hardware, not the browser engine. It adds ~8 bits of entropy that are genuinely hardware-dependent — addressing the entropy gap from excluding screen dimensions and speech voices.
+`webglRender` is included in [`crossBrowserId`](/guide/fingerprint-ids) because the pixel output depends on GPU hardware, not the browser engine. It adds ~8 bits of entropy that are genuinely hardware-dependent — addressing the entropy gap from excluding screen dimensions and speech voices.
 
 ## Usage
 
